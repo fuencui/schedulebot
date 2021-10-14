@@ -1,4 +1,4 @@
-app = "cs5500-f21-starterbot"
+app = "fuenbot"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
