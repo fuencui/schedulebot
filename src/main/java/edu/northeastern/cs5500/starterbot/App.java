@@ -44,6 +44,8 @@ public class App {
                                                 "What the bot should say")
                                         .setRequired(true)));
 
+        commands.addCommands(new CommandData("time", "Display current time"));
+
         commands.queue();
 
         port(8080);
