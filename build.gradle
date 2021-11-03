@@ -53,6 +53,14 @@ dependencies {
         // Remove the next line if your bot needs voice support!
         exclude module: "opus-java"
     }
+
+    // Use dagger for dependency injection
+    implementation 'com.google.dagger:dagger:2.40'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.40'
+
+    // MongoDB client
+    implementation 'org.mongodb:mongodb-driver:3.12.10'
+    
 }
 
 application {
