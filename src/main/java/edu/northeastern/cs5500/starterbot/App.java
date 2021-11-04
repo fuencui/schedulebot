@@ -61,18 +61,15 @@ public class App {
                                                 OptionType.STRING,
                                                 "content",
                                                 "What the bot should say")
-                                        .setRequired(true)));
-
-        commands.addCommands(new CommandData("time", "Display current time"));
-        
-        commands.addCommands(new CommandData("register", "register a student by name")
+                                        .setRequired(true)),
+                new CommandData("register", "register a student by name")
                         .addOptions(
-                                new OptionData(
-                                                OptionType.STRING,
-                                                "content",
-                                                "What is register UserName")
-                                        .setRequired(true)));
-        
+                        new OptionData(
+                                        OptionType.STRING,
+                                        "content",
+                                        "What is register UserName")
+                                .setRequired(true)),
+                new CommandData("time", "Display current time"));
         commands.queue();
 
         port(8080);
@@ -83,4 +80,5 @@ public class App {
                     return "{\"status\": \"OK\"}";
                 });
     }
+
 }

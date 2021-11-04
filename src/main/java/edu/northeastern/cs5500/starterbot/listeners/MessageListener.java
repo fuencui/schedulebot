@@ -21,8 +21,6 @@ public class MessageListener extends ListenerAdapter {
   
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        Date timestamp;
-        
 
         switch (event.getName()) {
             case "register":{
@@ -42,19 +40,20 @@ public class MessageListener extends ListenerAdapter {
                     registerListRepository.update(registerlist);
                     event.reply(name + " Registered successfully").queue();
                     break;
-                }}
-
-
-            case "time":   
-                timestamp = new Date();
+                }
+            }
+            case "time":{   
+                Date timestamp = new Date();
                 DateFormat df = new SimpleDateFormat("dd-MM-yy HH:mm:SS z");
                 df.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-                event.reply(df.format(timestamp)).queue();
-            
-            case "say":
+                String temp = df.format(timestamp);
+                event.reply(temp).queue();
+                break;
+            }
+            case "say":{
               event.reply(event.getOption("content").getAsString()).queue();
-            
-            break;
+              break;
+            }
         }
     }
 }
