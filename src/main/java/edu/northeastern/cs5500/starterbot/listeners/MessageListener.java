@@ -10,8 +10,8 @@ import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-
 public class MessageListener extends ListenerAdapter {
+    
     private GenericRepository<registerList> registerListRepository;
     
     public void setregisterListRepository(GenericRepository<registerList> registerListRepository){
@@ -41,14 +41,16 @@ public class MessageListener extends ListenerAdapter {
                     break;
                 }}
 
+
             case "time":   
                 timestamp = new Date();
                 DateFormat df = new SimpleDateFormat("dd-MM-yy HH:mm:SS z");
                 df.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
                 event.reply(df.format(timestamp)).queue();
-
+            
             case "say":
               event.reply(event.getOption("content").getAsString()).queue();
+            
             break;
         }
     }
