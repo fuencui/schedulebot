@@ -3,6 +3,12 @@ package edu.northeastern.cs5500.starterbot;
 import static spark.Spark.*;
 
 import edu.northeastern.cs5500.starterbot.listeners.MessageListener;
+import edu.northeastern.cs5500.starterbot.model.registerList;
+import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
+//import edu.northeastern.cs5500.starterbot.repository.InMemoryRepository;
+import edu.northeastern.cs5500.starterbot.repository.MongoDBRepository;
+import edu.northeastern.cs5500.starterbot.service.MongoDBService;
+
 import java.util.EnumSet;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
@@ -28,6 +34,11 @@ public class App {
                     "The BOT_TOKEN environment variable is not defined.");
         }
 
+        MessageListener messageListener = new MessageListener();
+        MongoDBService mongoDBService = new MongoDBService();
+        GenericRepository<registerList> registerListRepository = new MongoDBRepository<>(registerList.class, mongoDBService);
+        messageListener.setregisterListRepository(registerListRepository);
+
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
                         .addEventListeners(new MessageListener())
@@ -46,6 +57,13 @@ public class App {
 
         commands.addCommands(new CommandData("time", "Display current time"));
 
+        commands.addCommands(new CommandData("register", "register a student by name")
+                        .addOptions(
+                                new OptionData(
+                                                OptionType.STRING,
+                                                "content",
+                                                "What is register UserName")
+                                        .setRequired(true)));
         commands.queue();
 
         port(8080);
