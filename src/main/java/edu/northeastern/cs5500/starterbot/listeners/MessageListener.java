@@ -24,7 +24,7 @@ public class MessageListener extends ListenerAdapter {
         
 
         switch (event.getName()) {
-            case "register":
+            case "register":{
                 registerList registerlist = null;
                 for (registerList r : registerListRepository.getAll()){
                     registerlist = r;
@@ -33,18 +33,19 @@ public class MessageListener extends ListenerAdapter {
                 
                 if (registerlist.getNameList().contains(name)){
                     event.reply("Registration failed " +  name + " has been registered").queue();
+                    break;
                 } else {
                     registerlist.addNameToList(name);
                     registerListRepository.update(registerlist);
                     event.reply(name + " Registered successfully").queue();
-                }
-            break;
+                    break;
+                }}
+
             case "time":   
                 timestamp = new Date();
                 DateFormat df = new SimpleDateFormat("dd-MM-yy HH:mm:SS z");
                 df.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
                 event.reply(df.format(timestamp)).queue();
-            break;
 
             case "say":
               event.reply(event.getOption("content").getAsString()).queue();
