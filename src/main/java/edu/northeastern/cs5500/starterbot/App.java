@@ -8,6 +8,7 @@ import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import edu.northeastern.cs5500.starterbot.repository.MongoDBRepository;
 import edu.northeastern.cs5500.starterbot.service.MongoDBService;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
@@ -46,6 +47,7 @@ public class App {
         
         if (registerListRepository.count() == 0){
                 registerList registerlist = new registerList();
+                registerlist.setNameList(new ArrayList<>());
                 registerListRepository.add(registerlist);
         }
         

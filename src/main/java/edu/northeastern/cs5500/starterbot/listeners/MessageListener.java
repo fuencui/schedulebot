@@ -3,6 +3,7 @@ package edu.northeastern.cs5500.starterbot.listeners;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import edu.northeastern.cs5500.starterbot.model.registerList;
@@ -35,7 +36,9 @@ public class MessageListener extends ListenerAdapter {
                     event.reply("Registration failed " +  name + " has been registered").queue();
                     break;
                 } else {
-                    registerlist.addNameToList(name);
+                    List<String> array = registerlist.getNameList();
+                    array.add(name);
+                    registerlist.setNameList(array);
                     registerListRepository.update(registerlist);
                     event.reply(name + " Registered successfully").queue();
                     break;
