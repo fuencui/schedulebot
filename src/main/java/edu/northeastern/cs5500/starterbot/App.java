@@ -8,6 +8,7 @@ import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import edu.northeastern.cs5500.starterbot.repository.MongoDBRepository;
 import edu.northeastern.cs5500.starterbot.service.MongoDBService;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
@@ -46,6 +47,7 @@ public class App {
         
         if (registerListRepository.count() == 0){
                 registerList registerlist = new registerList();
+                registerlist.setNameList(new ArrayList<>());
                 registerListRepository.add(registerlist);
         }
         
@@ -59,18 +61,15 @@ public class App {
                                                 OptionType.STRING,
                                                 "content",
                                                 "What the bot should say")
-                                        .setRequired(true)));
-
-        commands.addCommands(new CommandData("time", "Display current time"));
-        
-        commands.addCommands(new CommandData("register", "register a student by name")
+                                        .setRequired(true)),
+                new CommandData("register", "register a student by name")
                         .addOptions(
-                                new OptionData(
-                                                OptionType.STRING,
-                                                "content",
-                                                "What is register UserName")
-                                        .setRequired(true)));
-        
+                        new OptionData(
+                                        OptionType.STRING,
+                                        "content",
+                                        "What is register UserName")
+                                .setRequired(true)),
+                new CommandData("time", "Display current time"));
         commands.queue();
 
         port(8080);
@@ -81,4 +80,5 @@ public class App {
                     return "{\"status\": \"OK\"}";
                 });
     }
+
 }

@@ -3,6 +3,7 @@ package edu.northeastern.cs5500.starterbot.listeners;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import edu.northeastern.cs5500.starterbot.model.registerList;
@@ -20,8 +21,6 @@ public class MessageListener extends ListenerAdapter {
   
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        Date timestamp;
-        
 
         switch (event.getName()) {
             case "register":{
@@ -35,23 +34,26 @@ public class MessageListener extends ListenerAdapter {
                     event.reply("Registration failed " +  name + " has been registered").queue();
                     break;
                 } else {
-                    registerlist.addNameToList(name);
+                    List<String> array = registerlist.getNameList();
+                    array.add(name);
+                    registerlist.setNameList(array);
                     registerListRepository.update(registerlist);
                     event.reply(name + " Registered successfully").queue();
                     break;
-                }}
-
-
-            case "time":   
-                timestamp = new Date();
+                }
+            }
+            case "time":{   
+                Date timestamp = new Date();
                 DateFormat df = new SimpleDateFormat("dd-MM-yy HH:mm:SS z");
                 df.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-                event.reply(df.format(timestamp)).queue();
-            
-            case "say":
+                String temp = df.format(timestamp);
+                event.reply(temp).queue();
+                break;
+            }
+            case "say":{
               event.reply(event.getOption("content").getAsString()).queue();
-            
-            break;
+              break;
+            }
         }
     }
 }
