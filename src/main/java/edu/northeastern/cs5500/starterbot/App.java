@@ -5,7 +5,6 @@ import static spark.Spark.*;
 import edu.northeastern.cs5500.starterbot.listeners.MessageListener;
 import edu.northeastern.cs5500.starterbot.model.registerList;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
-//import edu.northeastern.cs5500.starterbot.repository.InMemoryRepository;
 import edu.northeastern.cs5500.starterbot.repository.MongoDBRepository;
 import edu.northeastern.cs5500.starterbot.service.MongoDBService;
 
@@ -41,8 +40,15 @@ public class App {
 
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
-                        .addEventListeners(new MessageListener())
+                        .addEventListeners(messageListener)
                         .build();
+
+        
+        if (registerListRepository.count() == 0){
+                registerList registerlist = new registerList();
+                registerListRepository.add(registerlist);
+        }
+        
 
         CommandListUpdateAction commands = jda.updateCommands();
 
@@ -56,7 +62,7 @@ public class App {
                                         .setRequired(true)));
 
         commands.addCommands(new CommandData("time", "Display current time"));
-
+        
         commands.addCommands(new CommandData("register", "register a student by name")
                         .addOptions(
                                 new OptionData(
@@ -64,6 +70,7 @@ public class App {
                                                 "content",
                                                 "What is register UserName")
                                         .setRequired(true)));
+        
         commands.queue();
 
         port(8080);
