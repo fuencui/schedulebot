@@ -23,10 +23,13 @@ public class MongoDBService implements Service {
     static String getDatabaseURI() {
         ProcessBuilder processBuilder = new ProcessBuilder();
         final String databaseURI = processBuilder.environment().get("GROUP_MONGODB_URL");
-        if (databaseURI != null) {
+        return databaseURI;
+        
+        /*if (databaseURI != null) {
             return databaseURI;
         }
         return null; // connect to localhost by default
+        */
     }
 
     @Inject
