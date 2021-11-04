@@ -60,7 +60,6 @@ dependencies {
 
     // MongoDB client
     implementation 'org.mongodb:mongodb-driver:3.12.10'
-    
 }
 
 application {
