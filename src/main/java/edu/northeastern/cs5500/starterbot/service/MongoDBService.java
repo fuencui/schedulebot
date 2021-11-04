@@ -26,7 +26,7 @@ public class MongoDBService implements Service {
         if (databaseURI != null) {
             return databaseURI;
         }
-        return "mongodb://localhost:27017/Stuff"; // connect to localhost by default
+        return null; // connect to localhost by default
     }
 
     @Inject
