@@ -19,59 +19,46 @@ import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 public class App {
 
-    static String getBotToken() {
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        String token = processBuilder.environment().get("BOT_TOKEN");
-        return token;
-    }
-
-    public static void main(String[] arg) throws LoginException {
-        String token = getBotToken();
-        if (token == null) {
-            throw new IllegalArgumentException(
-                    "The BOT_TOKEN environment variable is not defined.");
+        static String getBotToken() {
+                ProcessBuilder processBuilder = new ProcessBuilder();
+                String token = processBuilder.environment().get("BOT_TOKEN");
+                return token;
         }
 
-        MessageListener messageListener = new MessageListener();
-        MongoDBService mongoDBService = new MongoDBService();
-        GenericRepository<User> userRepository =
-                new MongoDBRepository<User>(User.class, mongoDBService);
+        public static void main(String[] arg) throws LoginException {
+                String token = getBotToken();
+                if (token == null) {
+                        throw new IllegalArgumentException("The BOT_TOKEN environment variable is not defined.");
+                }
 
-        messageListener.setUserRepositoty(userRepository);
+                MessageListener messageListener = new MessageListener();
+                MongoDBService mongoDBService = new MongoDBService();
+                GenericRepository<User> userRepository = new MongoDBRepository<User>(User.class, mongoDBService);
 
-        JDA jda =
-                JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
-                        .addEventListeners(messageListener)
-                        .build();
-                        
-        //check duplicate here
+                messageListener.setUserRepositoty(userRepository);
 
-        CommandListUpdateAction commands = jda.updateCommands();
+                JDA jda = JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
+                                .addEventListeners(messageListener).build();
 
-        commands.addCommands(
-                new CommandData("say", "Makes the bot say what you told it to say")
-                        .addOptions(
-                                new OptionData(
-                                                OptionType.STRING,
-                                                "content",
-                                                "What the bot should say")
-                                        .setRequired(true)),
-                new CommandData("register", "register a student by name")
-                        .addOptions(
-                                new OptionData(
-                                                OptionType.STRING,
-                                                "content",
-                                                "What is register UserName")
-                                        .setRequired(true)),
-                new CommandData("time", "Display current time"));
-        commands.queue();
+                // check duplicate here
 
-        port(8080);
+                CommandListUpdateAction commands = jda.updateCommands();
 
-        get(
-                "/",
-                (request, response) -> {
-                    return "{\"status\": \"OK\"}";
+                commands.addCommands(
+                                new CommandData("say", "Makes the bot say what you told it to say").addOptions(
+                                                new OptionData(OptionType.STRING, "content", "What the bot should say")
+                                                                .setRequired(true)),
+                                new CommandData("register", "register a student by name,NUID, and role")
+                                                .addOptions(new OptionData(OptionType.STRING, "content",
+                                                                "format: {firstname} {NUID} {role(Student/TA/Professor)}")
+                                                                                .setRequired(true)),
+                                new CommandData("time", "Display current time"));
+                commands.queue();
+
+                port(8080);
+
+                get("/", (request, response) -> {
+                        return "{\"status\": \"OK\"}";
                 });
-    }
+        }
 }
