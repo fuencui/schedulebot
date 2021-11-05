@@ -8,8 +8,13 @@ public class User implements Model {
     private ObjectId id;
     // private String NUID;
     private String UserName;
+    private String NUID;
+    private Role userRoles;
 
-    public User(String UserName) {
+    public User(String UserName, String NUID, Role userRoles) {
         this.UserName = UserName;
+        this.NUID = NUID;
+        this.userRoles = userRoles;
     }
+
 }
