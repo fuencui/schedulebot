@@ -10,7 +10,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-//import lombok.Getter;
+// import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -22,9 +22,9 @@ public class MongoDBService implements Service {
 
     static String getDatabaseURI() {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        final String databaseURI = processBuilder.environment().get("GROUP_MONGODB_URL");
+        final String databaseURI = processBuilder.environment().get("MONGODB_URI");
         return databaseURI;
-        
+        // GROUP_MONGODB_URL
         /*if (databaseURI != null) {
             return databaseURI;
         }
@@ -50,9 +50,8 @@ public class MongoDBService implements Service {
         MongoClient mongoClient = MongoClients.create(mongoClientSettings);
         mongoDatabase = mongoClient.getDatabase(connectionString.getDatabase());
     }
-    
 
-    public MongoDBService(MongoDatabase mongoDatabase){
+    public MongoDBService(MongoDatabase mongoDatabase) {
         this.mongoDatabase = mongoDatabase;
     }
 
@@ -61,7 +60,5 @@ public class MongoDBService implements Service {
     }
 
     @Override
-    public void register() {
-        
-    }
+    public void register() {}
 }

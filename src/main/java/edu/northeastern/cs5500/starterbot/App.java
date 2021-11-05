@@ -3,12 +3,10 @@ package edu.northeastern.cs5500.starterbot;
 import static spark.Spark.*;
 
 import edu.northeastern.cs5500.starterbot.listeners.MessageListener;
-import edu.northeastern.cs5500.starterbot.model.registerList;
+import edu.northeastern.cs5500.starterbot.model.User;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import edu.northeastern.cs5500.starterbot.repository.MongoDBRepository;
 import edu.northeastern.cs5500.starterbot.service.MongoDBService;
-
-import java.util.ArrayList;
 import java.util.EnumSet;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
@@ -36,21 +34,17 @@ public class App {
 
         MessageListener messageListener = new MessageListener();
         MongoDBService mongoDBService = new MongoDBService();
-        GenericRepository<registerList> registerListRepository = new MongoDBRepository<>(registerList.class, mongoDBService);
-        messageListener.setregisterListRepository(registerListRepository);
+        GenericRepository<User> userRepository =
+                new MongoDBRepository<User>(User.class, mongoDBService);
+
+        messageListener.setUserRepositoty(userRepository);
 
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
                         .addEventListeners(messageListener)
                         .build();
-
-        
-        if (registerListRepository.count() == 0){
-                registerList registerlist = new registerList();
-                registerlist.setNameList(new ArrayList<>());
-                registerListRepository.add(registerlist);
-        }
-        
+                        
+        //check duplicate here
 
         CommandListUpdateAction commands = jda.updateCommands();
 
@@ -64,11 +58,11 @@ public class App {
                                         .setRequired(true)),
                 new CommandData("register", "register a student by name")
                         .addOptions(
-                        new OptionData(
-                                        OptionType.STRING,
-                                        "content",
-                                        "What is register UserName")
-                                .setRequired(true)),
+                                new OptionData(
+                                                OptionType.STRING,
+                                                "content",
+                                                "What is register UserName")
+                                        .setRequired(true)),
                 new CommandData("time", "Display current time"));
         commands.queue();
 
@@ -80,5 +74,4 @@ public class App {
                     return "{\"status\": \"OK\"}";
                 });
     }
-
 }
