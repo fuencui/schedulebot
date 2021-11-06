@@ -83,12 +83,12 @@ sourceSets {
             srcDirs 'build/generated/sources/annotationProcessor/java/main'
         }
     }
-    test {
-        java {
-            srcDirs 'src/test/java'
-            srcDirs 'build/generated/sources/annotationProcessor/java/test'
-        }
-    }
+    // test {
+    //     java {
+    //         srcDirs 'src/test/java'
+    //         srcDirs 'build/generated/sources/annotationProcessor/java/test'
+    //     }
+    // }
 }
 
 spotless {

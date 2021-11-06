@@ -9,21 +9,11 @@ import org.bson.types.ObjectId;
 public class Stuff implements Model {
     private ObjectId id;
     private String title;
-    // private String description;
+    private String description;
 
     /** @return true if this Stuff is valid */
     // @JsonIgnore
     public boolean isValid() {
         return title != null && !title.isEmpty();
-    }
-
-    @Override
-    public ObjectId getId() {
-        return this.id;
-    }
-
-    @Override
-    public void setId(ObjectId id) {
-        this.id = id;
     }
 }

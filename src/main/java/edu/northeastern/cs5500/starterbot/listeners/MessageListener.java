@@ -29,7 +29,7 @@ public class MessageListener extends ListenerAdapter {
                     Role role = Role.valueOf(infoArr[2]);
                     User user = new User(infoArr[0], infoArr[1], role);
                     user.setUserName(infoArr[0]);
-                    user.setNUID(infoArr[1]);
+                    user.setNuid(infoArr[1]);
                     user.setUserRoles(role);
                     userRepository.add(user);
                     event.reply("You have been registered!").queue();
