@@ -63,7 +63,14 @@ public class App {
                                                 "content",
                                                 "format: {firstname} {NUID} {role(Student/TA/Professor)}")
                                         .setRequired(true)),
-                new CommandData("time", "Display current time"));
+                new CommandData("time", "Display current time"),
+                new CommandData("vaccinated", "Get or set your own vaccination status.")
+                        .addOptions(
+                                new OptionData(
+                                                OptionType.BOOLEAN,
+                                                "vaccinated",
+                                                "true if you are vaccinated; false if you are not")
+                                        .setRequired(false)));
         commands.queue();
 
         port(8080);

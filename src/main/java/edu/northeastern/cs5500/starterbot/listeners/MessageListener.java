@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class MessageListener extends ListenerAdapter {
 
@@ -47,6 +48,19 @@ public class MessageListener extends ListenerAdapter {
                 {
                     event.reply(event.getOption("content").getAsString()).queue();
                     break;
+                }
+            case "vaccinated":
+                {
+                    OptionMapping vaccinated = event.getOption("vaccinated");
+
+                    StringBuilder responseBuilder = new StringBuilder();
+                    responseBuilder.append("Your status is: ");
+
+                    if (vaccinated != null) {
+                        responseBuilder.append(vaccinated.getAsBoolean());
+                    } else {
+                        responseBuilder.append("UNKNOWN");
+                    }
                 }
         }
     }
