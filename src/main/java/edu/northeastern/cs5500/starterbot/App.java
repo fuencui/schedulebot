@@ -37,7 +37,7 @@ public class App {
         GenericRepository<User> userRepository =
                 new MongoDBRepository<User>(User.class, mongoDBService);
 
-        messageListener.setUserRepositoty(userRepository);
+        messageListener.setUserRepository(userRepository);
 
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))

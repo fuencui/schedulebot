@@ -14,7 +14,7 @@ public class MessageListener extends ListenerAdapter {
 
     private GenericRepository<User> userRepository;
 
-    public void setUserRepositoty(GenericRepository<User> user) {
+    public void setUserRepository(GenericRepository<User> user) {
         this.userRepository = user;
     }
 
