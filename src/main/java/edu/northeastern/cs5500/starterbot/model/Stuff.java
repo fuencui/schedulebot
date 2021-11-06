@@ -1,7 +1,6 @@
 package edu.northeastern.cs5500.starterbot.model;
 
 // import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 import org.bson.types.ObjectId;
 

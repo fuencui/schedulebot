@@ -2,8 +2,8 @@ package edu.northeastern.cs5500.starterbot.repository;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.northeastern.cs5500.starterbot.model.NEUUsers;
 import edu.northeastern.cs5500.starterbot.model.Stuff;
-import edu.northeastern.cs5500.starterbot.model.User;
 import edu.northeastern.cs5500.starterbot.service.MongoDBService;
 
 @Module
@@ -14,8 +14,8 @@ public class RepositoryModule {
     }
 
     @Provides
-    public GenericRepository<User> provideUserRepository(MongoDBService mongoDBService) {
-        return new MongoDBRepository<>(User.class, mongoDBService);
+    public GenericRepository<NEUUsers> provideUserRepository(MongoDBService mongoDBService) {
+        return new MongoDBRepository<>(NEUUsers.class, mongoDBService);
     }
 }
 

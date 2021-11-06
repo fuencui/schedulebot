@@ -5,7 +5,7 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 
 @Data
-public class User implements Model {
+public class NEUUsers implements Model {
     private ObjectId id;
     @Nonnull private String userName;
     @Nonnull private String nuid;

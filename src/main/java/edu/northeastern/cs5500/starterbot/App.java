@@ -3,7 +3,7 @@ package edu.northeastern.cs5500.starterbot;
 import static spark.Spark.*;
 
 import edu.northeastern.cs5500.starterbot.listeners.MessageListener;
-import edu.northeastern.cs5500.starterbot.model.User;
+import edu.northeastern.cs5500.starterbot.model.NEUUsers;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import edu.northeastern.cs5500.starterbot.repository.MongoDBRepository;
 import edu.northeastern.cs5500.starterbot.service.MongoDBService;
@@ -34,16 +34,13 @@ public class App {
 
         MessageListener messageListener = new MessageListener();
         MongoDBService mongoDBService = new MongoDBService();
-        GenericRepository<User> userRepository =
-                new MongoDBRepository<User>(User.class, mongoDBService);
-
-        messageListener.setUserRepository(userRepository);
+        GenericRepository<NEUUsers> userRepository =
+                new MongoDBRepository<NEUUsers>(NEUUsers.class, mongoDBService);
 
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
                         .addEventListeners(messageListener)
                         .build();
-
         // check duplicate here
 
         CommandListUpdateAction commands = jda.updateCommands();
