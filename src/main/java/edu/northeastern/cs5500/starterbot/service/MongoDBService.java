@@ -34,13 +34,18 @@ public class MongoDBService implements Service {
 
     @Inject
     public MongoDBService() {
-        CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
-                fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+        CodecRegistry codecRegistry =
+                fromRegistries(
+                        MongoClientSettings.getDefaultCodecRegistry(),
+                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
         ConnectionString connectionString = new ConnectionString(getDatabaseURI());
 
-        MongoClientSettings mongoClientSettings = MongoClientSettings.builder().codecRegistry(codecRegistry)
-                .applyConnectionString(connectionString).build();
+        MongoClientSettings mongoClientSettings =
+                MongoClientSettings.builder()
+                        .codecRegistry(codecRegistry)
+                        .applyConnectionString(connectionString)
+                        .build();
 
         MongoClient mongoClient = MongoClients.create(mongoClientSettings);
         mongoDatabase = mongoClient.getDatabase(connectionString.getDatabase());
@@ -55,6 +60,5 @@ public class MongoDBService implements Service {
     }
 
     @Override
-    public void register() {
-    }
+    public void register() {}
 }

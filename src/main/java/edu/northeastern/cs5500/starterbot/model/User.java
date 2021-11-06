@@ -16,5 +16,4 @@ public class User implements Model {
         this.NUID = NUID;
         this.userRoles = userRoles;
     }
-
 }
