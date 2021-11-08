@@ -1,41 +1,47 @@
 package edu.northeastern.cs5500.starterbot.listeners;
 
 import edu.northeastern.cs5500.starterbot.model.NEUUsers;
-import edu.northeastern.cs5500.starterbot.model.Role;
+import edu.northeastern.cs5500.starterbot.model.Student;
+import edu.northeastern.cs5500.starterbot.model.TAProfessor;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class MessageListener extends ListenerAdapter {
     private GenericRepository<NEUUsers> userRepository;
-    private User user;
+    private NEUUsers user;
 
-    public void setUserId(User user) {
+    public void setUserId(NEUUsers user) {
         this.user = user;
     }
 
-    public void setUserRepository(GenericRepository<NEUUsers> user) {
+    public void setNEUUserRepository(GenericRepository<NEUUsers> user) {
         this.userRepository = user;
     }
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        setUserId(event.getUser());
+
+        // setUserId(event.getUser());
+
         switch (event.getName()) {
             case "register":
                 {
                     String[] infoArr = event.getOption("content").getAsString().split("\\s+");
-                    Role role = Role.valueOf(infoArr[2]);
-                    NEUUsers user = new NEUUsers(infoArr[0], infoArr[1], role);
-                    user.setUserName(infoArr[0]);
-                    user.setNuid(infoArr[1]);
-                    user.setUserRoles(role);
+                    String role = infoArr[2].toLowerCase();
+                    if (role.equals("student")) {
+                        user = new Student(infoArr[0], infoArr[1]);
+                    } else if (role.equals("ta") || role.equals("professor")) {
+                        user = new TAProfessor(infoArr[0], infoArr[1]);
+                    } else {
+                        event.reply("Invalid input, try agian. ").queue();
+                        break;
+                    }
                     userRepository.add(user);
                     event.reply("You have been registered!").queue();
                     break;
