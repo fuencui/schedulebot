@@ -4,6 +4,7 @@ import static spark.Spark.*;
 
 import edu.northeastern.cs5500.starterbot.listeners.MessageListener;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
+import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import edu.northeastern.cs5500.starterbot.repository.MongoDBRepository;
 import edu.northeastern.cs5500.starterbot.service.MongoDBService;
@@ -36,7 +37,11 @@ public class App {
         MongoDBService mongoDBService = new MongoDBService();
         GenericRepository<NEUUser> userRepository =
                 new MongoDBRepository<NEUUser>(NEUUser.class, mongoDBService);
+
+        GenericRepository<OfficeHour> ohRepository =
+                new MongoDBRepository<OfficeHour>(OfficeHour.class, mongoDBService);
         messageListener.setNEUUserRepository(userRepository);
+        messageListener.setOHRepository(ohRepository);
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
                         .addEventListeners(messageListener)
@@ -46,12 +51,20 @@ public class App {
         CommandListUpdateAction commands = jda.updateCommands();
 
         commands.addCommands(
-                new CommandData("say", "Makes the bot say what you told it to say")
+                // new CommandData("say", "Makes the bot say what you told it to say")
+                //         .addOptions(
+                //                 new OptionData(
+                //                                 OptionType.STRING,
+                //                                 "content",
+                //                                 "What the bot should say")
+                //                         .setRequired(true)),
+                new CommandData("reserve", "Make a reservation")
                         .addOptions(
                                 new OptionData(
                                                 OptionType.STRING,
                                                 "content",
-                                                "What the bot should say")
+                                                "format: {TA's name} {whitch day of the week} {reservation type(in person/online)}"
+                                                        + "{start time} {end time}")
                                         .setRequired(true)),
                 new CommandData("register", "register a student by name,NUID, and role")
                         .addOptions(
