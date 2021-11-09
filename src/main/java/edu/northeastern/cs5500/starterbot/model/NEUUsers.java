@@ -9,11 +9,6 @@ public abstract class NEUUsers implements Model {
     private ObjectId id;
     @Nonnull private String userName;
     @Nonnull private String nuid;
-    @Nonnull private boolean isVaccined;
-
-    public NEUUsers(String userName, String nuid) {
-        this.userName = userName;
-        this.nuid = nuid;
-        this.isVaccined = false;
-    }
+    // TODO: rename to isVaccinated
+    private boolean isVaccined = false;
 }
