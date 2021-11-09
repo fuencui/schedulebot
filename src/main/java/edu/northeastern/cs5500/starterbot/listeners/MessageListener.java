@@ -1,8 +1,6 @@
 package edu.northeastern.cs5500.starterbot.listeners;
 
-import edu.northeastern.cs5500.starterbot.model.NEUUsers;
-import edu.northeastern.cs5500.starterbot.model.Student;
-import edu.northeastern.cs5500.starterbot.model.TAProfessor;
+import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,14 +11,14 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class MessageListener extends ListenerAdapter {
-    private GenericRepository<NEUUsers> userRepository;
-    private NEUUsers user;
+    private GenericRepository<NEUUser> userRepository;
+    private NEUUser user;
 
-    public void setUserId(NEUUsers user) {
+    public void setUserId(NEUUser user) {
         this.user = user;
     }
 
-    public void setNEUUserRepository(GenericRepository<NEUUsers> user) {
+    public void setNEUUserRepository(GenericRepository<NEUUser> user) {
         this.userRepository = user;
     }
 
@@ -35,9 +33,10 @@ public class MessageListener extends ListenerAdapter {
                     String[] infoArr = event.getOption("content").getAsString().split("\\s+");
                     String role = infoArr[2].toLowerCase();
                     if (role.equals("student")) {
-                        user = new Student(infoArr[0], infoArr[1]);
+                        user = new NEUUser(infoArr[0], infoArr[1]);
                     } else if (role.equals("ta") || role.equals("professor")) {
-                        user = new TAProfessor(infoArr[0], infoArr[1]);
+                        user = new NEUUser(infoArr[0], infoArr[1]);
+                        user.setStuff(true);
                     } else {
                         event.reply("Invalid input, try agian. ").queue();
                         break;
