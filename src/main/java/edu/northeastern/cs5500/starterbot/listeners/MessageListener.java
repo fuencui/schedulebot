@@ -1,7 +1,6 @@
 package edu.northeastern.cs5500.starterbot.listeners;
 
 import edu.northeastern.cs5500.starterbot.model.*;
-import edu.northeastern.cs5500.starterbot.model.DayOfWeek;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import java.text.DateFormat;
@@ -26,8 +25,8 @@ public class MessageListener extends ListenerAdapter {
         this.userRepository = user;
     }
 
-    public void setOHRepository(GenericRepository<OfficeHour> oh) {
-        this.OHRepository = oh;
+    public void setOHRepository(GenericRepository<OfficeHour> ohRepository) {
+        this.OHRepository = ohRepository;
     }
 
     @Override

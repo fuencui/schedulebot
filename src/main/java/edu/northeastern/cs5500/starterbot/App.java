@@ -58,13 +58,13 @@ public class App {
                 //                                 "content",
                 //                                 "What the bot should say")
                 //                         .setRequired(true)),
+
                 new CommandData("reserve", "Make a reservation")
                         .addOptions(
                                 new OptionData(
                                                 OptionType.STRING,
                                                 "content",
-                                                "format: {TA's name} {whitch day of the week} {reservation type(in person/online)}"
-                                                        + "{start time} {end time}")
+                                                "format: {TAsName} {WhitchDAY} {inPerson/Online} {StartTime} {EndTime}")
                                         .setRequired(true)),
                 new CommandData("register", "register a student by name,NUID, and role")
                         .addOptions(
