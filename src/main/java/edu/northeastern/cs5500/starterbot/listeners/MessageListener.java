@@ -43,7 +43,7 @@ public class MessageListener extends ListenerAdapter {
                         user = new NEUUser(infoArr[0], infoArr[1]);
                     } else if (role.equals("ta") || role.equals("professor")) {
                         user = new NEUUser(infoArr[0], infoArr[1]);
-                        user.setStuff(true);
+                        user.setStaff(true);
                     } else {
                         event.reply("Invalid input, try agian. ").queue();
                         break;
