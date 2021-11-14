@@ -38,10 +38,10 @@ public class App {
         GenericRepository<NEUUser> userRepository =
                 new MongoDBRepository<NEUUser>(NEUUser.class, mongoDBService);
 
-        GenericRepository<OfficeHour> ohRepository =
+        GenericRepository<OfficeHour> officeHourRepository =
                 new MongoDBRepository<OfficeHour>(OfficeHour.class, mongoDBService);
         messageListener.setNEUUserRepository(userRepository);
-        messageListener.setOHRepository(ohRepository);
+        messageListener.setOfficeHourRepository(officeHourRepository);
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
                         .addEventListeners(messageListener)
