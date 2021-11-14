@@ -13,9 +13,9 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class MessageListener extends ListenerAdapter {
     private GenericRepository<NEUUser> userRepository;
-    private GenericRepository<OfficeHour> OHRepository;
+    private GenericRepository<OfficeHour> OfficeHourRepository;
     private NEUUser user;
-    OfficeHour oh;
+    OfficeHour officeHour;
 
     public void setUserId(NEUUser user) {
         this.user = user;
@@ -25,8 +25,8 @@ public class MessageListener extends ListenerAdapter {
         this.userRepository = user;
     }
 
-    public void setOHRepository(GenericRepository<OfficeHour> ohRepository) {
-        this.OHRepository = ohRepository;
+    public void setOfficeHourRepository(GenericRepository<OfficeHour> officeHourRepository) {
+        this.OfficeHourRepository = officeHourRepository;
     }
 
     @Override
@@ -60,49 +60,49 @@ public class MessageListener extends ListenerAdapter {
                     String startTime = infoArr[3];
                     String endTime = infoArr[4];
                     if (dayOfWeek.equals("sunday")) {
-                        oh =
+                        officeHour =
                                 new OfficeHour(
                                         DayOfWeek.SUNDAY,
                                         new OfficeHourType(type),
                                         Integer.parseInt(startTime),
                                         Integer.parseInt(endTime));
                     } else if (dayOfWeek.equals("monday")) {
-                        oh =
+                        officeHour =
                                 new OfficeHour(
                                         DayOfWeek.MONDAY,
                                         new OfficeHourType(type),
                                         Integer.parseInt(startTime),
                                         Integer.parseInt(endTime));
                     } else if (dayOfWeek.equals("tuesday")) {
-                        oh =
+                        officeHour =
                                 new OfficeHour(
                                         DayOfWeek.TUESDAY,
                                         new OfficeHourType(type),
                                         Integer.parseInt(startTime),
                                         Integer.parseInt(endTime));
                     } else if (dayOfWeek.equals("wednesday")) {
-                        oh =
+                        officeHour =
                                 new OfficeHour(
                                         DayOfWeek.WEDNESDAY,
                                         new OfficeHourType(type),
                                         Integer.parseInt(startTime),
                                         Integer.parseInt(endTime));
                     } else if (dayOfWeek.equals("thursday")) {
-                        oh =
+                        officeHour =
                                 new OfficeHour(
                                         DayOfWeek.THURSDAY,
                                         new OfficeHourType(type),
                                         Integer.parseInt(startTime),
                                         Integer.parseInt(endTime));
                     } else if (dayOfWeek.equals("friday")) {
-                        oh =
+                        officeHour =
                                 new OfficeHour(
                                         DayOfWeek.FRIDAY,
                                         new OfficeHourType(type),
                                         Integer.parseInt(startTime),
                                         Integer.parseInt(endTime));
                     } else if (dayOfWeek.equals("saturday")) {
-                        oh =
+                        officeHour =
                                 new OfficeHour(
                                         DayOfWeek.SATURDAY,
                                         new OfficeHourType(type),
@@ -112,7 +112,7 @@ public class MessageListener extends ListenerAdapter {
                         event.reply("You have error in your input, please try agian.").queue();
                         break;
                     }
-                    this.OHRepository.add(oh);
+                    this.OfficeHourRepository.add(officeHour);
 
                     event.reply("You made a reservation!").queue();
                     break;
