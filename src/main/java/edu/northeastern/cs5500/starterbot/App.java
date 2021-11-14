@@ -12,9 +12,6 @@ import java.util.EnumSet;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
@@ -40,47 +37,20 @@ public class App {
 
         GenericRepository<OfficeHour> officeHourRepository =
                 new MongoDBRepository<OfficeHour>(OfficeHour.class, mongoDBService);
-        messageListener.setNEUUserRepository(userRepository);
-        messageListener.setOfficeHourRepository(officeHourRepository);
+        messageListener.getRegister().setUserRepository(userRepository);
+        messageListener.getReserve().setOfficeHourRepository(officeHourRepository);
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
                         .addEventListeners(messageListener)
                         .build();
-        // check duplicate here
 
         CommandListUpdateAction commands = jda.updateCommands();
 
-        commands.addCommands(
-                // new CommandData("say", "Makes the bot say what you told it to say")
-                //         .addOptions(
-                //                 new OptionData(
-                //                                 OptionType.STRING,
-                //                                 "content",
-                //                                 "What the bot should say")
-                //                         .setRequired(true)),
+        commands.addCommands(messageListener.getTime().getCommandData());
+        commands.addCommands(messageListener.getRegister().getCommandData());
+        commands.addCommands(messageListener.getReserve().getCommandData());
+        commands.addCommands(messageListener.getVaccinate().getCommandData());
 
-                new CommandData("reserve", "Make a reservation")
-                        .addOptions(
-                                new OptionData(
-                                                OptionType.STRING,
-                                                "content",
-                                                "format: {TAsName} {WhitchDAY} {inPerson/Online} {StartTime} {EndTime}")
-                                        .setRequired(true)),
-                new CommandData("register", "register a student by name,NUID, and role")
-                        .addOptions(
-                                new OptionData(
-                                                OptionType.STRING,
-                                                "content",
-                                                "format: {firstname} {NUID} {role(Student/TA/Professor)}")
-                                        .setRequired(true)),
-                new CommandData("time", "Display current time"),
-                new CommandData("vaccinated", "Get or set your own vaccination status.")
-                        .addOptions(
-                                new OptionData(
-                                                OptionType.BOOLEAN,
-                                                "vaccinated",
-                                                "true if you are vaccinated; false if you are not")
-                                        .setRequired(false)));
         commands.queue();
 
         port(8080);
