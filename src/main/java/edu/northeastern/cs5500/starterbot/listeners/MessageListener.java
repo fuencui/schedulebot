@@ -1,152 +1,47 @@
 package edu.northeastern.cs5500.starterbot.listeners;
 
-import edu.northeastern.cs5500.starterbot.model.*;
-import edu.northeastern.cs5500.starterbot.model.NEUUser;
-import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.RegisterCommand;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ReserveCommand;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ScheduleBotCommandsInterface;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ScheduleBotCommandsWithRepositoryAbstract;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.TimeCommand;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.VaccinateCommand;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nonnull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class MessageListener extends ListenerAdapter {
-    private GenericRepository<NEUUser> userRepository;
-    private GenericRepository<OfficeHour> OfficeHourRepository;
-    private NEUUser user;
-    OfficeHour officeHour;
 
-    public void setUserId(NEUUser user) {
-        this.user = user;
-    }
+    private Map<String, ScheduleBotCommandsInterface> commandsHashMap;
+    @Nonnull ScheduleBotCommandsInterface time;
+    @Nonnull ScheduleBotCommandsWithRepositoryAbstract register;
+    @Nonnull ScheduleBotCommandsWithRepositoryAbstract reserve;
+    @Nonnull ScheduleBotCommandsInterface vaccinate;
 
-    public void setNEUUserRepository(GenericRepository<NEUUser> user) {
-        this.userRepository = user;
-    }
-
-    public void setOfficeHourRepository(GenericRepository<OfficeHour> officeHourRepository) {
-        this.OfficeHourRepository = officeHourRepository;
+    public MessageListener() {
+        commandsHashMap = new HashMap<>();
+        time = new TimeCommand();
+        register = new RegisterCommand();
+        reserve = new ReserveCommand();
+        vaccinate = new VaccinateCommand();
+        commandsHashMap.put(time.getName(), time);
+        commandsHashMap.put(register.getName(), register);
+        commandsHashMap.put(reserve.getName(), reserve);
+        commandsHashMap.put(vaccinate.getName(), vaccinate);
     }
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-
-        // setUserId(event.getUser());
-
-        switch (event.getName()) {
-            case "register":
-                {
-                    String[] infoArr = event.getOption("content").getAsString().split("\\s+");
-                    String role = infoArr[2].toLowerCase();
-                    if (role.equals("student")) {
-                        user = new NEUUser(infoArr[0], infoArr[1]);
-                    } else if (role.equals("ta") || role.equals("professor")) {
-                        user = new NEUUser(infoArr[0], infoArr[1]);
-                        user.setStaff(true);
-                    } else {
-                        event.reply("Invalid input, try agian. ").queue();
-                        break;
-                    }
-                    userRepository.add(user);
-                    event.reply("You have been registered!").queue();
-                    break;
-                }
-            case "reserve":
-                {
-                    String[] infoArr = event.getOption("content").getAsString().split("\\s+");
-                    String dayOfWeek = infoArr[1].toLowerCase();
-                    String type = infoArr[2].toLowerCase();
-                    String startTime = infoArr[3];
-                    String endTime = infoArr[4];
-                    if (dayOfWeek.equals("sunday")) {
-                        officeHour =
-                                new OfficeHour(
-                                        DayOfWeek.SUNDAY,
-                                        new OfficeHourType(type),
-                                        Integer.parseInt(startTime),
-                                        Integer.parseInt(endTime));
-                    } else if (dayOfWeek.equals("monday")) {
-                        officeHour =
-                                new OfficeHour(
-                                        DayOfWeek.MONDAY,
-                                        new OfficeHourType(type),
-                                        Integer.parseInt(startTime),
-                                        Integer.parseInt(endTime));
-                    } else if (dayOfWeek.equals("tuesday")) {
-                        officeHour =
-                                new OfficeHour(
-                                        DayOfWeek.TUESDAY,
-                                        new OfficeHourType(type),
-                                        Integer.parseInt(startTime),
-                                        Integer.parseInt(endTime));
-                    } else if (dayOfWeek.equals("wednesday")) {
-                        officeHour =
-                                new OfficeHour(
-                                        DayOfWeek.WEDNESDAY,
-                                        new OfficeHourType(type),
-                                        Integer.parseInt(startTime),
-                                        Integer.parseInt(endTime));
-                    } else if (dayOfWeek.equals("thursday")) {
-                        officeHour =
-                                new OfficeHour(
-                                        DayOfWeek.THURSDAY,
-                                        new OfficeHourType(type),
-                                        Integer.parseInt(startTime),
-                                        Integer.parseInt(endTime));
-                    } else if (dayOfWeek.equals("friday")) {
-                        officeHour =
-                                new OfficeHour(
-                                        DayOfWeek.FRIDAY,
-                                        new OfficeHourType(type),
-                                        Integer.parseInt(startTime),
-                                        Integer.parseInt(endTime));
-                    } else if (dayOfWeek.equals("saturday")) {
-                        officeHour =
-                                new OfficeHour(
-                                        DayOfWeek.SATURDAY,
-                                        new OfficeHourType(type),
-                                        Integer.parseInt(startTime),
-                                        Integer.parseInt(endTime));
-                    } else {
-                        event.reply("You have error in your input, please try agian.").queue();
-                        break;
-                    }
-                    this.OfficeHourRepository.add(officeHour);
-
-                    event.reply("You made a reservation!").queue();
-                    break;
-                }
-            case "time":
-                {
-                    Date timestamp = new Date();
-                    DateFormat df = new SimpleDateFormat("dd-MM-yy HH:mm:SS z");
-                    df.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-                    String temp = df.format(timestamp);
-                    event.reply(temp).queue();
-                    break;
-                }
-                // case "say":
-                //     {
-                //         event.reply(event.getOption("content").getAsString()).queue();
-                //         // event.reply(this.user.getId()).queue();
-                //         break;
-                //     }
-            case "vaccinated":
-                {
-                    OptionMapping vaccinated = event.getOption("vaccinated");
-
-                    StringBuilder responseBuilder = new StringBuilder();
-                    responseBuilder.append("Your status is: ");
-
-                    if (vaccinated != null) {
-                        responseBuilder.append(vaccinated.getAsBoolean());
-                    } else {
-                        responseBuilder.append("UNKNOWN");
-                    }
-                    event.reply(responseBuilder.toString()).queue();
-                    break;
-                }
+        if (commandsHashMap.containsKey(event.getName())) {
+            ScheduleBotCommandsInterface scheduleBotCommands = commandsHashMap.get(event.getName());
+            scheduleBotCommands.onSlashCommand(event);
+            return;
         }
     }
 }
