@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class MessageListener extends ListenerAdapter {
-
     private Map<String, ScheduleBotCommandsInterface> commandsHashMap;
     @Nonnull ScheduleBotCommandsInterface time;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract register;
