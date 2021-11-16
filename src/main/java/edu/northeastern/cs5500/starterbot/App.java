@@ -2,7 +2,9 @@ package edu.northeastern.cs5500.starterbot;
 
 import static spark.Spark.*;
 
+import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.listeners.MessageListener;
+import edu.northeastern.cs5500.starterbot.model.DiscordIdLog;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
@@ -37,7 +39,14 @@ public class App {
 
         GenericRepository<OfficeHour> officeHourRepository =
                 new MongoDBRepository<OfficeHour>(OfficeHour.class, mongoDBService);
+
+        GenericRepository<DiscordIdLog> discordIdLogRepository =
+                new MongoDBRepository<DiscordIdLog>(DiscordIdLog.class, mongoDBService);
         messageListener.getRegister().setUserRepository(userRepository);
+        messageListener.getRegister().setDiscordIdLogRepository(discordIdLogRepository);
+        messageListener
+                .getRegister()
+                .setDiscordIdController(new DiscordIdController(discordIdLogRepository));
         messageListener.getReserve().setOfficeHourRepository(officeHourRepository);
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))

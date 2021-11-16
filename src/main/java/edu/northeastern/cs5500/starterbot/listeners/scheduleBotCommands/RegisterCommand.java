@@ -1,5 +1,6 @@
 package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
 
+import edu.northeastern.cs5500.starterbot.model.DiscordIdLog;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -17,17 +18,24 @@ public class RegisterCommand extends ScheduleBotCommandsWithRepositoryAbstract {
     public void onSlashCommand(SlashCommandEvent event) {
         String[] infoArr = event.getOption("content").getAsString().split("\\s+");
         String role = infoArr[2].toLowerCase();
-        if (role.equals("student")) {
-            neuuser = new NEUUser(infoArr[0], infoArr[1]);
-        } else if (role.equals("ta") || role.equals("professor")) {
-            neuuser = new NEUUser(infoArr[0], infoArr[1]);
-            neuuser.setStaff(true);
+        String discordId = event.getUser().getId();
+        if (!discordIdController.isDiscordIdRegistered(discordId)) {
+            if (role.equals("student")) {
+                neuuser = new NEUUser(infoArr[0], infoArr[1]);
+            } else if (role.equals("ta") || role.equals("professor")) {
+                neuuser = new NEUUser(infoArr[0], infoArr[1]);
+                neuuser.setStaff(true);
+            } else {
+                event.reply("Invalid input, try agian. ").queue();
+            }
+            userRepository.add(neuuser);
+            discordIdLogRepository.add(new DiscordIdLog(discordId, infoArr[1]));
+            event.reply("You have been registered!").queue();
+            return;
         } else {
-            event.reply("Invalid input, try agian. ").queue();
+            String nuid = discordIdController.getNuidByDiscordiD(discordId);
+            event.reply("NUID :" + nuid + " You already registered!").queue();
         }
-        userRepository.add(neuuser);
-        event.reply("You have been registered!").queue();
-        return;
     }
 
     @Override
