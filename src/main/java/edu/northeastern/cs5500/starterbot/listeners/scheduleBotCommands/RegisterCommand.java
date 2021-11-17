@@ -34,7 +34,7 @@ public class RegisterCommand extends ScheduleBotCommandsWithRepositoryAbstract {
             return;
         } else {
             String nuid = discordIdController.getNuidByDiscordiD(discordId);
-            event.reply("NUID :" + nuid + " You already registered!").queue();
+            event.reply("NUID :" + nuid + "\nYou already registered!").queue();
         }
     }
 

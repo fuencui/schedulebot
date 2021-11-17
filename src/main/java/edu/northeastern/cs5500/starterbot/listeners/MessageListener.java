@@ -21,7 +21,7 @@ public class MessageListener extends ListenerAdapter {
     @Nonnull ScheduleBotCommandsInterface time;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract register;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract reserve;
-    @Nonnull ScheduleBotCommandsInterface vaccinate;
+    @Nonnull ScheduleBotCommandsWithRepositoryAbstract vaccinate;
 
     public MessageListener() {
         commandsHashMap = new HashMap<>();

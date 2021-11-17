@@ -1,6 +1,7 @@
 package edu.northeastern.cs5500.starterbot.controller;
 
 import edu.northeastern.cs5500.starterbot.model.DiscordIdLog;
+import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import javax.annotation.Nonnull;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.Data;
 @Data
 public class DiscordIdController {
     @Nonnull private GenericRepository<DiscordIdLog> discordIdLogRepository;
+    @Nonnull private GenericRepository<NEUUser> NEUUserRepository;
 
     public String getNuidByDiscordiD(String discordId) {
         if (!discordIdLogRepository.getAll().isEmpty()) {
@@ -29,5 +31,15 @@ public class DiscordIdController {
             }
         }
         return false;
+    }
+
+    public NEUUser getNEUUser(String discordId) {
+        String nuid = this.getNuidByDiscordiD(discordId);
+        for (NEUUser user : this.NEUUserRepository.getAll()) {
+            if (user.getNuid().equals(nuid)) {
+                return user;
+            }
+        }
+        return null;
     }
 }

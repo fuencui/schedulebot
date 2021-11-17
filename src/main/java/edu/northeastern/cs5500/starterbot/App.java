@@ -42,11 +42,18 @@ public class App {
 
         GenericRepository<DiscordIdLog> discordIdLogRepository =
                 new MongoDBRepository<DiscordIdLog>(DiscordIdLog.class, mongoDBService);
+
+        DiscordIdController discordIdController =
+                new DiscordIdController(discordIdLogRepository, userRepository);
+
         messageListener.getRegister().setUserRepository(userRepository);
         messageListener.getRegister().setDiscordIdLogRepository(discordIdLogRepository);
-        messageListener
-                .getRegister()
-                .setDiscordIdController(new DiscordIdController(discordIdLogRepository));
+        messageListener.getRegister().setDiscordIdController(discordIdController);
+
+        messageListener.getVaccinate().setUserRepository(userRepository);
+        messageListener.getVaccinate().setDiscordIdLogRepository(discordIdLogRepository);
+        messageListener.getVaccinate().setDiscordIdController(discordIdController);
+
         messageListener.getReserve().setOfficeHourRepository(officeHourRepository);
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
