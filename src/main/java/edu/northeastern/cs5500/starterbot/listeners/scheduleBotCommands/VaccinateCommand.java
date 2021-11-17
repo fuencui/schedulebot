@@ -1,12 +1,13 @@
 package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
 
+import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class VaccinateCommand implements ScheduleBotCommandsInterface {
+public class VaccinateCommand extends ScheduleBotCommandsWithRepositoryAbstract {
 
     @Override
     public String getName() {
@@ -17,14 +18,13 @@ public class VaccinateCommand implements ScheduleBotCommandsInterface {
     public void onSlashCommand(SlashCommandEvent event) {
         OptionMapping vaccinated = event.getOption("vaccinated");
 
+        String discordId = event.getUser().getId();
+        NEUUser user = discordIdController.getNEUUser(discordId);
+        user.setVaccinated(vaccinated.getAsBoolean());
         StringBuilder responseBuilder = new StringBuilder();
         responseBuilder.append("Your status is: ");
-
-        if (vaccinated != null) {
-            responseBuilder.append(vaccinated.getAsBoolean());
-        } else {
-            responseBuilder.append("UNKNOWN");
-        }
+        responseBuilder.append(vaccinated.getAsBoolean());
+        userRepository.update(user);
         event.reply(responseBuilder.toString()).queue();
         return;
     }
