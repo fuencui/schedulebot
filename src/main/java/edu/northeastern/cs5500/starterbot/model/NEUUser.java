@@ -15,4 +15,5 @@ public class NEUUser implements Model {
     @Nonnull private String userName;
     @Nonnull private String nuid;
     private boolean isVaccinated = false;
+    @Nonnull private Schedule schedule;
 }
