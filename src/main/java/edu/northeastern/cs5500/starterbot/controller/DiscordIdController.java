@@ -2,9 +2,7 @@ package edu.northeastern.cs5500.starterbot.controller;
 
 import edu.northeastern.cs5500.starterbot.model.DiscordIdLog;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
-import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
-import java.util.PriorityQueue;
 import javax.annotation.Nonnull;
 import lombok.Data;
 
@@ -54,7 +52,8 @@ public class DiscordIdController {
                 user = u;
             }
         }
-        if (user == null) return "null";
+        return "null";
+        /* if (user == null) return "null";
         PriorityQueue<OfficeHour> scheduledOfficeHours =
                 user.getSchedule().getScheduledOfficeHours();
 
@@ -65,6 +64,6 @@ public class DiscordIdController {
             sb.append("From : " + officeHour.getStartHour() + " To ");
             sb.append(officeHour.getEndHour() + "\n");
         }
-        return sb.toString() == "" ? "null" : sb.toString();
+        return sb.toString() == "" ? "null" : sb.toString(); */
     }
 }
