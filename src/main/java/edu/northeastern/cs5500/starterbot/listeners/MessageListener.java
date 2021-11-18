@@ -1,5 +1,6 @@
 package edu.northeastern.cs5500.starterbot.listeners;
 
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.CreateOfficeHourCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.RegisterCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ReserveCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ScheduleBotCommandsInterface;
@@ -24,6 +25,7 @@ public class MessageListener extends ListenerAdapter {
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract reserve;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract vaccinate;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract upcoming;
+    @Nonnull ScheduleBotCommandsWithRepositoryAbstract createOfficeHour;
 
     public MessageListener() {
         commandsHashMap = new HashMap<>();
@@ -32,11 +34,13 @@ public class MessageListener extends ListenerAdapter {
         reserve = new ReserveCommand();
         vaccinate = new VaccinateCommand();
         upcoming = new UpcomingCommand();
+        createOfficeHour = new CreateOfficeHourCommand();
         commandsHashMap.put(time.getName(), time);
         commandsHashMap.put(register.getName(), register);
         commandsHashMap.put(reserve.getName(), reserve);
         commandsHashMap.put(vaccinate.getName(), vaccinate);
         commandsHashMap.put(upcoming.getName(), upcoming);
+        commandsHashMap.put(createOfficeHour.getName(), createOfficeHour);
     }
 
     @Override
