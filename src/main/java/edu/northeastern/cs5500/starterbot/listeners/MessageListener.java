@@ -5,6 +5,7 @@ import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ReserveC
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ScheduleBotCommandsInterface;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ScheduleBotCommandsWithRepositoryAbstract;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.TimeCommand;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.UpcomingCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.VaccinateCommand;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ public class MessageListener extends ListenerAdapter {
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract register;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract reserve;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract vaccinate;
+    @Nonnull ScheduleBotCommandsWithRepositoryAbstract upcoming;
 
     public MessageListener() {
         commandsHashMap = new HashMap<>();
@@ -29,10 +31,12 @@ public class MessageListener extends ListenerAdapter {
         register = new RegisterCommand();
         reserve = new ReserveCommand();
         vaccinate = new VaccinateCommand();
+        upcoming = new UpcomingCommand();
         commandsHashMap.put(time.getName(), time);
         commandsHashMap.put(register.getName(), register);
         commandsHashMap.put(reserve.getName(), reserve);
         commandsHashMap.put(vaccinate.getName(), vaccinate);
+        commandsHashMap.put(upcoming.getName(), upcoming);
     }
 
     @Override

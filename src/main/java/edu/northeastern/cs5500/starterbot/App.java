@@ -55,6 +55,11 @@ public class App {
         messageListener.getVaccinate().setDiscordIdController(discordIdController);
 
         messageListener.getReserve().setOfficeHourRepository(officeHourRepository);
+
+        messageListener.getUpcoming().setUserRepository(userRepository);
+        messageListener.getUpcoming().setDiscordIdLogRepository(discordIdLogRepository);
+        messageListener.getUpcoming().setDiscordIdController(discordIdController);
+
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
                         .addEventListeners(messageListener)
@@ -66,7 +71,7 @@ public class App {
         commands.addCommands(messageListener.getRegister().getCommandData());
         commands.addCommands(messageListener.getReserve().getCommandData());
         commands.addCommands(messageListener.getVaccinate().getCommandData());
-
+        commands.addCommands(messageListener.getUpcoming().getCommandData());
         commands.queue();
 
         port(8080);
