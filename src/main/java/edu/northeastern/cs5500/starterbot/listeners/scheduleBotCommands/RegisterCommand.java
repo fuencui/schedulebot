@@ -2,7 +2,6 @@ package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
 
 import edu.northeastern.cs5500.starterbot.model.DiscordIdLog;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
-import edu.northeastern.cs5500.starterbot.model.Schedule;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -22,9 +21,9 @@ public class RegisterCommand extends ScheduleBotCommandsWithRepositoryAbstract {
         String discordId = event.getUser().getId();
         if (!discordIdController.isDiscordIdRegistered(discordId)) {
             if (role.equals("student")) {
-                neuuser = new NEUUser(infoArr[0], infoArr[1], new Schedule());
+                neuuser = new NEUUser(infoArr[0], infoArr[1]);
             } else if (role.equals("ta") || role.equals("professor")) {
-                neuuser = new NEUUser(infoArr[0], infoArr[1], new Schedule());
+                neuuser = new NEUUser(infoArr[0], infoArr[1]);
                 neuuser.setStaff(true);
             } else {
                 event.reply("Invalid input, try agian. ").queue();
