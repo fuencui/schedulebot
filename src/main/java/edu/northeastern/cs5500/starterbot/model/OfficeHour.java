@@ -15,6 +15,8 @@ public class OfficeHour implements Model, Comparable<OfficeHour> {
     @Nonnull private OfficeHourType officeHourType;
     @Nonnull private int startHour; // 0 = midnight, 23 = 11pm
     @Nonnull private int endHour; // 0 = midnight, 23 = 11pm
+    @Nonnull private String hostNUID;
+    private String attendeeNUID;
 
     @Override
     public int compareTo(OfficeHour other) {
@@ -57,5 +59,14 @@ public class OfficeHour implements Model, Comparable<OfficeHour> {
                 break;
         }
         return result;
+    }
+
+    public String toString() {
+        return this.dayOfWeek.toString()
+                + " from "
+                + this.startHour
+                + ":00 to "
+                + this.endHour
+                + ":00.";
     }
 }
