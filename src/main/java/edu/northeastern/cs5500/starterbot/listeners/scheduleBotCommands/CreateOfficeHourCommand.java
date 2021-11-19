@@ -22,6 +22,13 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
     public void onSlashCommand(SlashCommandEvent event) {
         String[] infoArr = event.getOption("content").getAsString().split("\\s+");
         String dayOfWeekString = infoArr[0].toUpperCase();
+        String discordId = event.getUser().getId();
+        NEUUser user = discordIdController.getNEUUser(discordId);
+
+        if (!user.isStaff()) {
+            event.reply("Only instructor can create office hour.").queue();
+            return;
+        }
         DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
         if (dayOfWeekString.equals("SUNDAY")) {
             dayOfWeek = DayOfWeek.SUNDAY;
@@ -44,17 +51,22 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
 
         int startTime = Integer.parseInt(infoArr[1]);
         int endTime = Integer.parseInt(infoArr[2]);
-        String discordId = event.getUser().getId();
-        NEUUser user = discordIdController.getNEUUser(discordId);
+
         OfficeHour officeHour =
-                new OfficeHour(dayOfWeek, new OfficeHourType("Online"), startTime, endTime);
+                new OfficeHour(
+                        dayOfWeek,
+                        new OfficeHourType("Online"),
+                        startTime,
+                        endTime,
+                        user.getNuid());
         List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
         involvedOfficeHours.add(officeHour);
         Collections.sort(involvedOfficeHours);
         user.setInvolvedOfficeHours(involvedOfficeHours);
         userRepository.update(user);
+
         event.reply(
-                        "Success! You booked an office hour at "
+                        "Success! You created an office hour at "
                                 + officeHour.getDayOfWeek().toString().toLowerCase()
                                 + " from "
                                 + startTime
