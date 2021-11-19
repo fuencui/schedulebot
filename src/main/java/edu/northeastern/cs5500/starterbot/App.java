@@ -56,10 +56,6 @@ public class App {
 
         messageListener.getReserve().setOfficeHourRepository(officeHourRepository);
 
-        messageListener.getUpcoming().setUserRepository(userRepository);
-        messageListener.getUpcoming().setDiscordIdLogRepository(discordIdLogRepository);
-        messageListener.getUpcoming().setDiscordIdController(discordIdController);
-
         messageListener.getCreateOfficeHour().setUserRepository(userRepository);
         messageListener.getCreateOfficeHour().setDiscordIdLogRepository(discordIdLogRepository);
         messageListener.getCreateOfficeHour().setDiscordIdController(discordIdController);
@@ -79,7 +75,6 @@ public class App {
         commands.addCommands(messageListener.getRegister().getCommandData());
         commands.addCommands(messageListener.getReserve().getCommandData());
         commands.addCommands(messageListener.getVaccinate().getCommandData());
-        commands.addCommands(messageListener.getUpcoming().getCommandData());
         commands.addCommands(messageListener.getCreateOfficeHour().getCommandData());
         commands.addCommands(messageListener.getListAllOfficeHour().getCommandData());
         commands.queue();

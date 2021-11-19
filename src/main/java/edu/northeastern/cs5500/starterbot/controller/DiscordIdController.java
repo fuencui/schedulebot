@@ -42,28 +42,4 @@ public class DiscordIdController {
         }
         return null;
     }
-
-    public String getUpcoming(String discordId) {
-        StringBuilder sb = new StringBuilder();
-        String nuid = this.getNuidByDiscordiD(discordId);
-        NEUUser user = null;
-        for (NEUUser u : this.NEUUserRepository.getAll()) {
-            if (u.getNuid().equals(nuid)) {
-                user = u;
-            }
-        }
-        return "null";
-        /* if (user == null) return "null";
-        PriorityQueue<OfficeHour> scheduledOfficeHours =
-                user.getSchedule().getScheduledOfficeHours();
-
-        while (!scheduledOfficeHours.isEmpty()) {
-            OfficeHour officeHour = scheduledOfficeHours.poll();
-            sb.append(officeHour.getDayOfWeek().toString());
-            sb.append(" : ");
-            sb.append("From : " + officeHour.getStartHour() + " To ");
-            sb.append(officeHour.getEndHour() + "\n");
-        }
-        return sb.toString() == "" ? "null" : sb.toString(); */
-    }
 }
