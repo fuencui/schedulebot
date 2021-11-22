@@ -54,6 +54,10 @@ public class App {
         messageListener.getVaccinate().setDiscordIdLogRepository(discordIdLogRepository);
         messageListener.getVaccinate().setDiscordIdController(discordIdController);
 
+        messageListener.getCovidsymptom().setUserRepository(userRepository);
+        messageListener.getCovidsymptom().setDiscordIdLogRepository(discordIdLogRepository);
+        messageListener.getCovidsymptom().setDiscordIdController(discordIdController);
+
         messageListener.getReserve().setOfficeHourRepository(officeHourRepository);
 
         messageListener.getCreateOfficeHour().setUserRepository(userRepository);
@@ -75,6 +79,7 @@ public class App {
         commands.addCommands(messageListener.getRegister().getCommandData());
         commands.addCommands(messageListener.getReserve().getCommandData());
         commands.addCommands(messageListener.getVaccinate().getCommandData());
+        commands.addCommands(messageListener.getCovidsymptom().getCommandData());
         commands.addCommands(messageListener.getCreateOfficeHour().getCommandData());
         commands.addCommands(messageListener.getListAllOfficeHour().getCommandData());
         commands.addCommands(messageListener.getRules().getCommandData());
