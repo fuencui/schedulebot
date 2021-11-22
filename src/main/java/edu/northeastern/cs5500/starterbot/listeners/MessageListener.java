@@ -1,6 +1,7 @@
 package edu.northeastern.cs5500.starterbot.listeners;
 
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.CreateOfficeHourCommand;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.DeleteOfficeHourCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ListAllOfficeHourCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.RegisterCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ReserveCommand;
@@ -29,7 +30,9 @@ public class MessageListener extends ListenerAdapter {
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract covidsymptom;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract createOfficeHour;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract listAllOfficeHour;
+    @Nonnull ScheduleBotCommandsWithRepositoryAbstract deleteOfficeHour;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract rules;
+
 
     public MessageListener() {
         commandsHashMap = new HashMap<>();
@@ -40,7 +43,9 @@ public class MessageListener extends ListenerAdapter {
         covidsymptom = new SymptomCommand();
         createOfficeHour = new CreateOfficeHourCommand();
         listAllOfficeHour = new ListAllOfficeHourCommand();
+        deleteOfficeHour = new DeleteOfficeHourCommand();
         rules = new RulesCommand();
+
         commandsHashMap.put(time.getName(), time);
         commandsHashMap.put(register.getName(), register);
         commandsHashMap.put(reserve.getName(), reserve);
@@ -48,6 +53,7 @@ public class MessageListener extends ListenerAdapter {
         commandsHashMap.put(covidsymptom.getName(), covidsymptom);
         commandsHashMap.put(createOfficeHour.getName(), createOfficeHour);
         commandsHashMap.put(listAllOfficeHour.getName(), listAllOfficeHour);
+        commandsHashMap.put(deleteOfficeHour.getName(), deleteOfficeHour);
         commandsHashMap.put(rules.getName(), rules);
     }
 
