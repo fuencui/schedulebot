@@ -17,6 +17,7 @@ public class NEUUser implements Model {
     @Nonnull private String userName;
     @Nonnull private String nuid;
     private boolean isVaccinated = false;
+    private boolean symptom = false;
     // @Nonnull private Schedule schedule;
     List<OfficeHour> involvedOfficeHours = new ArrayList<OfficeHour>();
     // PriorityQueue<OfficeHour> involvedOfficeHours =

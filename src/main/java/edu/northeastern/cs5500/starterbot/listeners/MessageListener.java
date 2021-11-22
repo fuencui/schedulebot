@@ -5,8 +5,10 @@ import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.DeleteOf
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ListAllOfficeHourCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.RegisterCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ReserveCommand;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.RulesCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ScheduleBotCommandsInterface;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ScheduleBotCommandsWithRepositoryAbstract;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.SymptomCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.TimeCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.VaccinateCommand;
 import java.util.HashMap;
@@ -25,9 +27,12 @@ public class MessageListener extends ListenerAdapter {
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract register;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract reserve;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract vaccinate;
+    @Nonnull ScheduleBotCommandsWithRepositoryAbstract covidsymptom;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract createOfficeHour;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract listAllOfficeHour;
     @Nonnull ScheduleBotCommandsWithRepositoryAbstract deleteOfficeHour;
+    @Nonnull ScheduleBotCommandsWithRepositoryAbstract rules;
+
 
     public MessageListener() {
         commandsHashMap = new HashMap<>();
@@ -35,16 +40,21 @@ public class MessageListener extends ListenerAdapter {
         register = new RegisterCommand();
         reserve = new ReserveCommand();
         vaccinate = new VaccinateCommand();
+        covidsymptom = new SymptomCommand();
         createOfficeHour = new CreateOfficeHourCommand();
         listAllOfficeHour = new ListAllOfficeHourCommand();
         deleteOfficeHour = new DeleteOfficeHourCommand();
+        rules = new RulesCommand();
+
         commandsHashMap.put(time.getName(), time);
         commandsHashMap.put(register.getName(), register);
         commandsHashMap.put(reserve.getName(), reserve);
         commandsHashMap.put(vaccinate.getName(), vaccinate);
+        commandsHashMap.put(covidsymptom.getName(), covidsymptom);
         commandsHashMap.put(createOfficeHour.getName(), createOfficeHour);
         commandsHashMap.put(listAllOfficeHour.getName(), listAllOfficeHour);
         commandsHashMap.put(deleteOfficeHour.getName(), deleteOfficeHour);
+        commandsHashMap.put(rules.getName(), rules);
     }
 
     @Override
