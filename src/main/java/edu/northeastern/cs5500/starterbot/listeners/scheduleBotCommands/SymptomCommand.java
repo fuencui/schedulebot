@@ -22,7 +22,7 @@ public class SymptomCommand extends ScheduleBotCommandsWithRepositoryAbstract {
         NEUUser user = discordIdController.getNEUUser(discordId);
         user.setSymptom(covidsymptom.getAsBoolean());
         StringBuilder responseBuilder = new StringBuilder();
-        responseBuilder.append("Are you experiencing covid symptom? Answer: ");
+        responseBuilder.append("You are experiencing covid symptom: ");
         responseBuilder.append(covidsymptom.getAsBoolean());
         userRepository.update(user);
         event.reply(responseBuilder.toString()).queue();
