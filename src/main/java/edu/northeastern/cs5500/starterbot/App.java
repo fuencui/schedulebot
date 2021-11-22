@@ -77,6 +77,7 @@ public class App {
         commands.addCommands(messageListener.getVaccinate().getCommandData());
         commands.addCommands(messageListener.getCreateOfficeHour().getCommandData());
         commands.addCommands(messageListener.getListAllOfficeHour().getCommandData());
+        commands.addCommands(messageListener.getRules().getCommandData());
         commands.queue();
 
         port(8080);
