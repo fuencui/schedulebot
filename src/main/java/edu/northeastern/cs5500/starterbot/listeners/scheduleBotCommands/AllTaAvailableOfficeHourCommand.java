@@ -34,19 +34,15 @@ public class AllTaAvailableOfficeHourCommand extends ScheduleBotCommandsWithRepo
         }
         while (taProfList.size() != 0) {
             NEUUser taProf = taProfList.removeFirst();
-            if (!taProf.isStaff()) {
+            List<OfficeHour> officeHourList = taProf.getInvolvedOfficeHours();
+            if (officeHourList == null || officeHourList.size() == 0) {
                 continue;
             } else {
-                List<OfficeHour> officeHourList = taProf.getInvolvedOfficeHours();
-                if (officeHourList.size() == 0) {
-                    continue;
-                } else {
-                    for (OfficeHour officeHour : officeHourList) {
-                        if (officeHour.getAttendeeNUID() != null) continue;
-                        sb.append("TA/Professor: " + taProf.getUserName() + "\t");
-                        sb.append(officeHour.toString() + "\t");
-                        sb.append("Type: " + officeHour.getOfficeHourType().getTypeName() + "\n");
-                    }
+                for (OfficeHour officeHour : officeHourList) {
+                    if (officeHour.getAttendeeNUID() != null) continue;
+                    sb.append("TA/Professor: " + taProf.getUserName() + "\t");
+                    sb.append(officeHour.toString() + "\t");
+                    sb.append("Type: " + officeHour.getOfficeHourType().getTypeName() + "\n");
                 }
                 sb.append("\n");
             }
