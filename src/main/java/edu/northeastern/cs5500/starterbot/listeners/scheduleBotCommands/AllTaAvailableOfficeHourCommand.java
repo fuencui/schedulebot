@@ -28,14 +28,16 @@ public class AllTaAvailableOfficeHourCommand extends ScheduleBotCommandsWithRepo
             return;
         }
         Deque<NEUUser> taProfList = discordIdController.getAllTAProf();
-        if (taProfList.size() == 0) {
+        if (taProfList.isEmpty()) {
             event.reply("No office hours available").queue();
             return;
         }
-        while (taProfList.size() != 0) {
-            NEUUser taProf = taProfList.removeFirst();
+
+        sb.append("Available Office Hours: \n");
+        while (!taProfList.isEmpty()) {
+            NEUUser taProf = taProfList.poll();
             List<OfficeHour> officeHourList = taProf.getInvolvedOfficeHours();
-            if (officeHourList == null || officeHourList.size() == 0) {
+            if (officeHourList == null || officeHourList.isEmpty()) {
                 continue;
             } else {
                 for (OfficeHour officeHour : officeHourList) {
@@ -47,11 +49,11 @@ public class AllTaAvailableOfficeHourCommand extends ScheduleBotCommandsWithRepo
                 sb.append("\n");
             }
         }
-        if (sb.toString() == "") {
-            event.reply("No office hours available").queue();
-            return;
+        if (sb.toString().equals("Available Office Hours: \n")) {
+            event.reply("No Available Office Hours").queue();
+        } else {
+            event.reply(sb.toString()).queue();
         }
-        event.reply(sb.toString()).queue();
         return;
     }
 
