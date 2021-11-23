@@ -3,6 +3,8 @@ package edu.northeastern.cs5500.starterbot.controller;
 import edu.northeastern.cs5500.starterbot.model.DiscordIdLog;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import javax.annotation.Nonnull;
 import lombok.Data;
 
@@ -41,5 +43,15 @@ public class DiscordIdController {
             }
         }
         return null;
+    }
+
+    public Deque<NEUUser> getAllTAProf() {
+        Deque<NEUUser> taProfList = new ArrayDeque<>();
+        for (NEUUser user : this.NEUUserRepository.getAll()) {
+            if (user.isStaff() == true) {
+                taProfList.add(user);
+            }
+        }
+        return taProfList;
     }
 }

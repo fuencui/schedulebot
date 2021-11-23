@@ -18,7 +18,15 @@ public class ListAllOfficeHourCommand extends ScheduleBotCommandsWithRepositoryA
         StringBuilder sb = new StringBuilder();
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
+        if (user == null) {
+            event.reply("User list is empty").queue();
+            return;
+        }
         List<OfficeHour> officeHourList = user.getInvolvedOfficeHours();
+        if (officeHourList.size() == 0) {
+            event.reply("NULL").queue();
+            return;
+        }
         for (OfficeHour officeHour : officeHourList) {
             sb.append(officeHour.toString() + "\n");
         }

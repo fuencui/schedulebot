@@ -72,6 +72,12 @@ public class App {
         messageListener.getDeleteOfficeHour().setDiscordIdLogRepository(discordIdLogRepository);
         messageListener.getDeleteOfficeHour().setDiscordIdController(discordIdController);
 
+        messageListener.getAlltaavailableofficehour().setUserRepository(userRepository);
+        messageListener
+                .getAlltaavailableofficehour()
+                .setDiscordIdLogRepository(discordIdLogRepository);
+        messageListener.getAlltaavailableofficehour().setDiscordIdController(discordIdController);
+
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
                         .addEventListeners(messageListener)
@@ -88,7 +94,7 @@ public class App {
         commands.addCommands(messageListener.getListAllOfficeHour().getCommandData());
         commands.addCommands(messageListener.getDeleteOfficeHour().getCommandData());
         commands.addCommands(messageListener.getRules().getCommandData());
-        
+        commands.addCommands(messageListener.getAlltaavailableofficehour().getCommandData());
 
         commands.queue();
 
