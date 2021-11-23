@@ -51,7 +51,7 @@ public class AllTaAvailableOfficeHourCommand extends ScheduleBotCommandsWithRepo
                 sb.append("\n");
             }
         }
-        if (sb.isEmpty()) {
+        if (sb.toString() == "") {
             event.reply("No office hours available").queue();
             return;
         }
