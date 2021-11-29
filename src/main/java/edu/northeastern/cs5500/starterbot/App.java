@@ -81,8 +81,8 @@ public class App {
 
         JDA jda =
                 JDABuilder.createLight(token, EnumSet.noneOf(GatewayIntent.class))
-                        .addEventListeners(messageListener)
                         .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                        .addEventListeners(messageListener)
                         .build();
 
         jda.addEventListener(new Welcome());
