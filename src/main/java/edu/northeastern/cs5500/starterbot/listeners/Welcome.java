@@ -21,7 +21,7 @@ public class Welcome extends ListenerAdapter {
                 "/vaccinated: if schedule for a in-person appointment, please provide your vaccinated status",
                 false);
         embed.addField(
-                "Step 4", "/reserve: make your reservation! pick a time fits for you", false);
+                "Step 3", "/reserve: make your reservation! pick a time fits for you", false);
         embed.addField("Additional", "/listmyofficehour: check your scheduled appointments", true);
         embed.setAuthor("Fuen,Yuchi,Hao,Ziling,Fanxing");
         event.getUser()
