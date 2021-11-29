@@ -44,6 +44,7 @@ public class MessageListener extends ListenerAdapter {
         listAllOfficeHour = new ListAllOfficeHourCommand();
         deleteOfficeHour = new DeleteOfficeHourCommand();
         alltaavailableofficehour = new AllTaAvailableOfficeHourCommand();
+
         commandsHashMap.put(time.getName(), time);
         commandsHashMap.put(register.getName(), register);
         commandsHashMap.put(reserve.getName(), reserve);
