@@ -31,7 +31,9 @@ public class VaccinateCommand extends ScheduleBotCommandsWithRepositoryAbstract 
 
     @Override
     public CommandData getCommandData() {
-        return new CommandData("vaccinated", "Get or set your own vaccination status.")
+        return new CommandData(
+                        "vaccinated",
+                        "Get or set your own vaccination status. Please answer True or False only")
                 .addOptions(
                         new OptionData(
                                         OptionType.BOOLEAN,
