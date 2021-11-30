@@ -52,28 +52,63 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
         int startTime = Integer.parseInt(infoArr[1]);
         int endTime = Integer.parseInt(infoArr[2]);
 
-        OfficeHour officeHour =
-                new OfficeHour(
-                        dayOfWeek,
-                        new OfficeHourType("Online"),
-                        startTime,
-                        endTime,
-                        user.getNuid());
-        List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
-        involvedOfficeHours.add(officeHour);
-        Collections.sort(involvedOfficeHours);
-        user.setInvolvedOfficeHours(involvedOfficeHours);
-        userRepository.update(user);
+        if (Math.abs(endTime - startTime) == 1) {
+            OfficeHour officeHour =
+                    new OfficeHour(
+                            dayOfWeek,
+                            new OfficeHourType("Online"),
+                            startTime,
+                            endTime,
+                            user.getNuid());
+            List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
+            involvedOfficeHours.add(officeHour);
+            Collections.sort(involvedOfficeHours);
+            user.setInvolvedOfficeHours(involvedOfficeHours);
+            userRepository.update(user);
 
-        event.reply(
-                        "Success! You created an office hour at "
+            event.reply(
+                            "Success! You created an office hour at "
+                                    + officeHour.getDayOfWeek().toString().toLowerCase()
+                                    + " from "
+                                    + startTime
+                                    + " to "
+                                    + endTime)
+                    .queue();
+            return;
+        } else {
+            if (endTime - startTime < 0) {
+                int temp = startTime;
+                startTime = endTime;
+                endTime = temp;
+            }
+            StringBuilder sb = new StringBuilder();
+            while (endTime - startTime > 0) {
+                OfficeHour officeHour =
+                        new OfficeHour(
+                                dayOfWeek,
+                                new OfficeHourType("Online"),
+                                startTime,
+                                startTime + 1,
+                                user.getNuid());
+                List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
+                involvedOfficeHours.add(officeHour);
+                Collections.sort(involvedOfficeHours);
+                user.setInvolvedOfficeHours(involvedOfficeHours);
+                userRepository.update(user);
+
+                sb.append(
+                        "You created an office hour at "
                                 + officeHour.getDayOfWeek().toString().toLowerCase()
                                 + " from "
                                 + startTime
                                 + " to "
-                                + endTime)
-                .queue();
-        return;
+                                + (startTime + 1)
+                                + "\n");
+                startTime++;
+            }
+            event.reply("Success! " + sb.toString()).queue();
+            return;
+        }
     }
 
     @Override

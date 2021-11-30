@@ -13,7 +13,7 @@ public class DiscordIdController {
     @Nonnull private GenericRepository<DiscordIdLog> discordIdLogRepository;
     @Nonnull private GenericRepository<NEUUser> NEUUserRepository;
 
-    public String getNuidByDiscordiD(String discordId) {
+    public String getNuidByDiscordId(String discordId) {
         if (!discordIdLogRepository.getAll().isEmpty()) {
             for (DiscordIdLog d : discordIdLogRepository.getAll()) {
                 if (d.getDiscordId().equals(discordId)) {
@@ -36,7 +36,7 @@ public class DiscordIdController {
     }
 
     public NEUUser getNEUUser(String discordId) {
-        String nuid = this.getNuidByDiscordiD(discordId);
+        String nuid = this.getNuidByDiscordId(discordId);
         for (NEUUser user : this.NEUUserRepository.getAll()) {
             if (user.getNuid().equals(nuid)) {
                 return user;
@@ -53,5 +53,14 @@ public class DiscordIdController {
             }
         }
         return taProfList;
+    }
+
+    public NEUUser getNEUUserByNuid(String nuid) {
+        for (NEUUser user : this.NEUUserRepository.getAll()) {
+            if (user.getNuid().equals(nuid)) {
+                return user;
+            }
+        }
+        return null;
     }
 }

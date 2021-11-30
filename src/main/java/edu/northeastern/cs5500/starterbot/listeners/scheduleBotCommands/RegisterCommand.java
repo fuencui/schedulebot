@@ -30,11 +30,15 @@ public class RegisterCommand extends ScheduleBotCommandsWithRepositoryAbstract {
             }
             userRepository.add(neuuser);
             discordIdLogRepository.add(new DiscordIdLog(discordId, infoArr[1]));
-            event.reply("You have been registered!").queue();
+            event.reply("Registered successfully, You have been registered!").queue();
             return;
         } else {
             NEUUser user = discordIdController.getNEUUser(discordId);
-            event.reply("Welcome back:  " + user.getUserName()).queue();
+            event.reply(
+                            "Welcome back:  "
+                                    + user.getUserName()
+                                    + "\n(This discord has been registered)")
+                    .queue();
         }
     }
 
