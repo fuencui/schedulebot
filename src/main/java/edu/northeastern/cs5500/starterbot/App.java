@@ -59,7 +59,9 @@ public class App {
         messageListener.getCovidsymptom().setDiscordIdLogRepository(discordIdLogRepository);
         messageListener.getCovidsymptom().setDiscordIdController(discordIdController);
 
-        messageListener.getReserve().setOfficeHourRepository(officeHourRepository);
+        messageListener.getReserve().setUserRepository(userRepository);
+        messageListener.getReserve().setDiscordIdLogRepository(discordIdLogRepository);
+        messageListener.getReserve().setDiscordIdController(discordIdController);
 
         messageListener.getCreateOfficeHour().setUserRepository(userRepository);
         messageListener.getCreateOfficeHour().setDiscordIdLogRepository(discordIdLogRepository);
