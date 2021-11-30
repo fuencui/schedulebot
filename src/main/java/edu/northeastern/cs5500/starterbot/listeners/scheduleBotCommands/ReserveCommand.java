@@ -70,68 +70,6 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
             event.reply("No such office hour session.").queue();
             return;
         }
-
-        // if (dayOfWeek.equals("sunday")) {
-        //     officeHour =
-        //             new OfficeHour(
-        //                     DayOfWeek.SUNDAY,
-        //                     new OfficeHourType(type),
-        //                     Integer.parseInt(startTime),
-        //                     Integer.parseInt(endTime),
-        //                     "");
-        // } else if (dayOfWeek.equals("monday")) {
-        //     officeHour =
-        //             new OfficeHour(
-        //                     DayOfWeek.MONDAY,
-        //                     new OfficeHourType(type),
-        //                     Integer.parseInt(startTime),
-        //                     Integer.parseInt(endTime),
-        //                     "");
-        // } else if (dayOfWeek.equals("tuesday")) {
-        //     officeHour =
-        //             new OfficeHour(
-        //                     DayOfWeek.TUESDAY,
-        //                     new OfficeHourType(type),
-        //                     Integer.parseInt(startTime),
-        //                     Integer.parseInt(endTime),
-        //                     "");
-        // } else if (dayOfWeek.equals("wednesday")) {
-        //     officeHour =
-        //             new OfficeHour(
-        //                     DayOfWeek.WEDNESDAY,
-        //                     new OfficeHourType(type),
-        //                     Integer.parseInt(startTime),
-        //                     Integer.parseInt(endTime),
-        //                     "");
-        // } else if (dayOfWeek.equals("thursday")) {
-        //     officeHour =
-        //             new OfficeHour(
-        //                     DayOfWeek.THURSDAY,
-        //                     new OfficeHourType(type),
-        //                     Integer.parseInt(startTime),
-        //                     Integer.parseInt(endTime),
-        //                     "");
-        // } else if (dayOfWeek.equals("friday")) {
-        //     officeHour =
-        //             new OfficeHour(
-        //                     DayOfWeek.FRIDAY,
-        //                     new OfficeHourType(type),
-        //                     Integer.parseInt(startTime),
-        //                     Integer.parseInt(endTime),
-        //                     "");
-        // } else if (dayOfWeek.equals("saturday")) {
-        //     officeHour =
-        //             new OfficeHour(
-        //                     DayOfWeek.SATURDAY,
-        //                     new OfficeHourType(type),
-        //                     Integer.parseInt(startTime),
-        //                     Integer.parseInt(endTime),
-        //                     "");
-        // } else {
-        //     event.reply("You have error in your input, please try agian.").queue();
-        //     return;
-        // }
-
     }
 
     @Override
