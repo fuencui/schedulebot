@@ -3,6 +3,7 @@ package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import edu.northeastern.cs5500.starterbot.model.OfficeHourType;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -46,6 +47,12 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
         // Get the current user from repository
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
+
+        // Only Student can make a reservation.
+        if (user.isStaff()) {
+            event.reply("Only student can make reservation.").queue();
+            return;
+        }
         List<OfficeHour> userOfficeHour = user.getInvolvedOfficeHours();
         // successFlag is to check if the input office hour exist.
         boolean successFlag = false;
@@ -64,6 +71,7 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
         if (successFlag) {
             // If input office hour exist and available, update repository.
             taProf.setInvolvedOfficeHours(taProfOfficeHours);
+            Collections.sort(userOfficeHour);
             user.setInvolvedOfficeHours(userOfficeHour);
             userRepository.update(taProf);
             userRepository.update(user);
