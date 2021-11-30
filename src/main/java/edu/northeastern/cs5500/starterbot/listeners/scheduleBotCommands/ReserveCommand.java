@@ -46,6 +46,7 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
         // Get the current user from repository
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
+        List<OfficeHour> userOfficeHour = user.getInvolvedOfficeHours();
         // successFlag is to check if the input office hour exist.
         boolean successFlag = false;
         for (OfficeHour officeHour : taProfOfficeHours) {
@@ -54,17 +55,18 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
                     && officeHour.getEndHour() == Integer.parseInt(endTime)) {
                 officeHour.setOfficeHourType(new OfficeHourType(type));
                 officeHour.setAttendeeNUID(user.getNuid());
-                user.getInvolvedOfficeHours().add(officeHour);
+                userOfficeHour.add(officeHour);
                 successFlag = true;
                 break;
             }
         }
 
         if (successFlag) {
+            // If input office hour exist and available, update repository.
             taProf.setInvolvedOfficeHours(taProfOfficeHours);
+            user.setInvolvedOfficeHours(userOfficeHour);
             userRepository.update(taProf);
             userRepository.update(user);
-
             event.reply("You made a reservation!").queue();
             return;
         } else {
