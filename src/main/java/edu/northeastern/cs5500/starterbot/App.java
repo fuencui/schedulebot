@@ -7,7 +7,6 @@ import edu.northeastern.cs5500.starterbot.listeners.MessageListener;
 import edu.northeastern.cs5500.starterbot.listeners.Welcome;
 import edu.northeastern.cs5500.starterbot.model.DiscordIdLog;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
-import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import edu.northeastern.cs5500.starterbot.repository.MongoDBRepository;
 import edu.northeastern.cs5500.starterbot.service.MongoDBService;
@@ -38,8 +37,8 @@ public class App {
         GenericRepository<NEUUser> userRepository =
                 new MongoDBRepository<NEUUser>(NEUUser.class, mongoDBService);
 
-        GenericRepository<OfficeHour> officeHourRepository =
-                new MongoDBRepository<OfficeHour>(OfficeHour.class, mongoDBService);
+        // GenericRepository<OfficeHour> officeHourRepository =
+        //         new MongoDBRepository<OfficeHour>(OfficeHour.class, mongoDBService);
 
         GenericRepository<DiscordIdLog> discordIdLogRepository =
                 new MongoDBRepository<DiscordIdLog>(DiscordIdLog.class, mongoDBService);

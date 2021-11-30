@@ -46,6 +46,7 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
         // Get the current user from repository
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
+        // successFlag is to check if the input office hour exist.
         boolean successFlag = false;
         for (OfficeHour officeHour : taProfOfficeHours) {
             if (officeHour.getDayOfWeek().toString().toLowerCase().equals(dayOfWeek)
