@@ -67,6 +67,6 @@ public class OfficeHour implements Model, Comparable<OfficeHour> {
                 + this.startHour
                 + ":00 to "
                 + this.endHour
-                + ":00.";
+                + ":00";
     }
 }
