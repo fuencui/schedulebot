@@ -27,7 +27,7 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
         String type = infoArr[2].toLowerCase();
         String startTime = infoArr[3];
         String endTime = infoArr[4];
-        // Get the target TA/Prof from repository
+        
         Deque<NEUUser> taProfList = discordIdController.getAllTAProf();
         if (taProfList.isEmpty()) {
             event.reply("No office hours available").queue();
@@ -44,7 +44,7 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
             return;
         }
         List<OfficeHour> taProfOfficeHours = taProf.getInvolvedOfficeHours();
-        // Get the current user from repository
+        
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
 
@@ -54,6 +54,23 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
             return;
         }
         List<OfficeHour> userOfficeHour = user.getInvolvedOfficeHours();
+        // Check if the user has a duplicate office hour
+        for (OfficeHour officeHour : userOfficeHour) {
+            if (officeHour.getDayOfWeek().toString().toLowerCase().equals(dayOfWeek)
+                    && officeHour.getStartHour() == Integer.parseInt(startTime)
+                    && officeHour.getEndHour() == Integer.parseInt(endTime)) {
+                event.reply(
+                                "You already have a reservation on "
+                                        + dayOfWeek
+                                        + " from "
+                                        + startTime
+                                        + " to "
+                                        + endTime
+                                        + ".")
+                        .queue();
+                return;
+            }
+        }
         // successFlag is to check if the input office hour exist.
         boolean successFlag = false;
         for (OfficeHour officeHour : taProfOfficeHours) {
