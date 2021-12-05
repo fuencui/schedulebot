@@ -20,6 +20,10 @@ public class VaccinateCommand extends ScheduleBotCommandsWithRepositoryAbstract 
 
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
+        if (user == null) {
+            event.reply("Please register yourself").queue();
+            return;
+        }
         user.setVaccinated(vaccinated.getAsBoolean());
         StringBuilder responseBuilder = new StringBuilder();
         responseBuilder.append("Your status is: ");
@@ -36,7 +40,7 @@ public class VaccinateCommand extends ScheduleBotCommandsWithRepositoryAbstract 
                         new OptionData(
                                         OptionType.BOOLEAN,
                                         "vaccinated",
-                                        "true if you are vaccinated; false if you are not")
+                                        "true if you are vaccinated or have a verified waver; false if you are not")
                                 .setRequired(false));
     }
 }

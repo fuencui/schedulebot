@@ -20,6 +20,8 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
+        String discordId = event.getUser().getId();
+        NEUUser user = discordIdController.getNEUUser(discordId);
         NEUUser taProf = null;
         String[] infoArr = event.getOption("content").getAsString().split("\\s+");
         String staffName = infoArr[0].toLowerCase();
@@ -27,7 +29,21 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
         String type = infoArr[2].toLowerCase();
         String startTime = infoArr[3];
         String endTime = infoArr[4];
-        
+        if (type.equals("inperson")) {
+            if (user.isSymptom()) {
+                event.reply(
+                                "In person appoinment not supported. Please visit https://news.northeastern.edu/coronavirus/ for more information.")
+                        .queue();
+                return;
+            }
+            if (!user.isVaccinated()) {
+                event.reply(
+                                "InPerson request require you to be vaccinated or have a waiver."
+                                        + "If you have been vaccinated, please update your vaccined status by using /vaccinated command.")
+                        .queue();
+                return;
+            }
+        }
         Deque<NEUUser> taProfList = discordIdController.getAllTAProf();
         if (taProfList.isEmpty()) {
             event.reply("No office hours available").queue();
@@ -44,9 +60,6 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
             return;
         }
         List<OfficeHour> taProfOfficeHours = taProf.getInvolvedOfficeHours();
-        
-        String discordId = event.getUser().getId();
-        NEUUser user = discordIdController.getNEUUser(discordId);
 
         // Only Student can make a reservation.
         if (user.isStaff()) {
