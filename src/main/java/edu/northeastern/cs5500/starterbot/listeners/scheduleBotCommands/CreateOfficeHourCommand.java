@@ -23,6 +23,7 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
         String[] infoArr = event.getOption("content").getAsString().split("\\s+");
         String dayOfWeekString = infoArr[0].toUpperCase();
         String discordId = event.getUser().getId();
+        String type = infoArr[3].toLowerCase();
         NEUUser user = discordIdController.getNEUUser(discordId);
 
         if (!user.isStaff()) {
@@ -56,7 +57,7 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
             OfficeHour officeHour =
                     new OfficeHour(
                             dayOfWeek,
-                            new OfficeHourType("Online"),
+                            new OfficeHourType(type),
                             startTime,
                             endTime,
                             user.getNuid());
@@ -86,7 +87,7 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
                 OfficeHour officeHour =
                         new OfficeHour(
                                 dayOfWeek,
-                                new OfficeHourType("Online"),
+                                new OfficeHourType(type),
                                 startTime,
                                 startTime + 1,
                                 user.getNuid());
@@ -118,7 +119,7 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
                         new OptionData(
                                         OptionType.STRING,
                                         "content",
-                                        "format: {DayofWeek} {StartTime} {EndTime}")
+                                        "format: {DayofWeek} {StartTime} {EndTime} {Type: hybrid/remote/inPerson}")
                                 .setRequired(true));
     }
 }

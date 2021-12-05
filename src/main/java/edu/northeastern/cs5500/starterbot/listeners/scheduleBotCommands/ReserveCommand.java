@@ -89,7 +89,9 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
         for (OfficeHour officeHour : taProfOfficeHours) {
             if (officeHour.getDayOfWeek().toString().toLowerCase().equals(dayOfWeek)
                     && officeHour.getStartHour() == Integer.parseInt(startTime)
-                    && officeHour.getEndHour() == Integer.parseInt(endTime)) {
+                    && officeHour.getEndHour() == Integer.parseInt(endTime)
+                    && (officeHour.getOfficeHourType().getTypeName() == type
+                            || officeHour.getOfficeHourType().getTypeName() == "hybrid")) {
                 officeHour.setOfficeHourType(new OfficeHourType(type));
                 officeHour.setAttendeeNUID(user.getNuid());
                 userOfficeHour.add(officeHour);
@@ -120,7 +122,7 @@ public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
                         new OptionData(
                                         OptionType.STRING,
                                         "content",
-                                        "format: {TAsName} {WhitchDAY} {inPerson/Online} {StartTime} {EndTime}")
+                                        "format: {TAsName} {WhitchDAY} {inPerson/remote} {StartTime} {EndTime}")
                                 .setRequired(true));
     }
 }
