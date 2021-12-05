@@ -2,16 +2,19 @@ package edu.northeastern.cs5500.starterbot.controller;
 
 import edu.northeastern.cs5500.starterbot.model.DiscordIdLog;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
+import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import lombok.Data;
 
 @Data
 public class DiscordIdController {
     @Nonnull private GenericRepository<DiscordIdLog> discordIdLogRepository;
-    @Nonnull private GenericRepository<NEUUser> NEUUserRepository;
+    @Nonnull private GenericRepository<NEUUser> neuUserRepository;
 
     public String getNuidByDiscordiD(String discordId) {
         if (!discordIdLogRepository.getAll().isEmpty()) {
@@ -37,7 +40,7 @@ public class DiscordIdController {
 
     public NEUUser getNEUUser(String discordId) {
         String nuid = this.getNuidByDiscordiD(discordId);
-        for (NEUUser user : this.NEUUserRepository.getAll()) {
+        for (NEUUser user : this.neuUserRepository.getAll()) {
             if (user.getNuid().equals(nuid)) {
                 return user;
             }
@@ -47,11 +50,33 @@ public class DiscordIdController {
 
     public Deque<NEUUser> getAllTAProf() {
         Deque<NEUUser> taProfList = new ArrayDeque<>();
-        for (NEUUser user : this.NEUUserRepository.getAll()) {
+        for (NEUUser user : this.neuUserRepository.getAll()) {
             if (user.isStaff() == true) {
                 taProfList.add(user);
             }
         }
         return taProfList;
+    }
+
+    public boolean updateVaccination(String discordId, boolean vaccinated) {
+        NEUUser user = getNEUUser(discordId);
+        if (user == null) {
+            return false;
+        }
+
+        user.setVaccinated(vaccinated);
+        neuUserRepository.update(user);
+        return true;
+    }
+
+    public boolean setInvolvedOfficeHours(String discordId, List<OfficeHour> involvedOfficeHours) {
+        NEUUser user = getNEUUser(discordId);
+        if (user == null) {
+            return false;
+        }
+
+        user.setInvolvedOfficeHours(involvedOfficeHours);
+        neuUserRepository.update(user);
+        return true;
     }
 }

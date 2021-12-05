@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
-public class RulesCommand extends ScheduleBotCommandsWithRepositoryAbstract {
+public class RulesCommand implements Command {
     @Override
     public String getName() {
         return "rules";

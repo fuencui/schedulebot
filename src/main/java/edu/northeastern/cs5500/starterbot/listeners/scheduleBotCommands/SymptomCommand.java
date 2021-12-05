@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class SymptomCommand extends ScheduleBotCommandsWithRepositoryAbstract {
+public class SymptomCommand implements Command {
 
     @Override
     public String getName() {

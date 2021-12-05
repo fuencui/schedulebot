@@ -6,7 +6,7 @@ import java.util.List;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
-public class ListAllOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAbstract {
+public class ListAllOfficeHourCommand implements Command {
 
     @Override
     public String getName() {

@@ -3,53 +3,43 @@ package edu.northeastern.cs5500.starterbot.listeners;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.AllTaAvailableOfficeHourCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.CreateOfficeHourCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.DeleteOfficeHourCommand;
+import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.GetStaffDailyOfficeHourCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ListAllOfficeHourCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.RegisterCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ReserveCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.RulesCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ScheduleBotCommandsInterface;
-import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.ScheduleBotCommandsWithRepositoryAbstract;
-import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.Staffdailyofficehour;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.SymptomCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.TimeCommand;
 import edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands.VaccinateCommand;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nonnull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
+@Slf4j
 public class MessageListener extends ListenerAdapter {
     private Map<String, ScheduleBotCommandsInterface> commandsHashMap;
-    @Nonnull ScheduleBotCommandsInterface time;
-    @Nonnull ScheduleBotCommandsWithRepositoryAbstract register;
-    @Nonnull ScheduleBotCommandsWithRepositoryAbstract reserve;
-    @Nonnull ScheduleBotCommandsWithRepositoryAbstract vaccinate;
-    @Nonnull ScheduleBotCommandsWithRepositoryAbstract covidsymptom;
-    @Nonnull ScheduleBotCommandsWithRepositoryAbstract createOfficeHour;
-    @Nonnull ScheduleBotCommandsWithRepositoryAbstract listAllOfficeHour;
-    @Nonnull ScheduleBotCommandsWithRepositoryAbstract deleteOfficeHour;
-    @Nonnull ScheduleBotCommandsWithRepositoryAbstract rules;
-    @Nonnull ScheduleBotCommandsWithRepositoryAbstract alltaavailableofficehour;
-    @Nonnull ScheduleBotCommandsWithRepositoryAbstract staffdailyofficehour;
 
     public MessageListener() {
         commandsHashMap = new HashMap<>();
-        time = new TimeCommand();
-        register = new RegisterCommand();
-        reserve = new ReserveCommand();
-        vaccinate = new VaccinateCommand();
-        covidsymptom = new SymptomCommand();
-        createOfficeHour = new CreateOfficeHourCommand();
-        listAllOfficeHour = new ListAllOfficeHourCommand();
-        deleteOfficeHour = new DeleteOfficeHourCommand();
-        rules = new RulesCommand();
-        alltaavailableofficehour = new AllTaAvailableOfficeHourCommand();
-        staffdailyofficehour = new Staffdailyofficehour();
+        ScheduleBotCommandsInterface time = new TimeCommand();
+        ScheduleBotCommandsInterface register = new RegisterCommand();
+        ScheduleBotCommandsInterface reserve = new ReserveCommand();
+        ScheduleBotCommandsInterface vaccinate = new VaccinateCommand();
+        ScheduleBotCommandsInterface covidsymptom = new SymptomCommand();
+        ScheduleBotCommandsInterface createOfficeHour = new CreateOfficeHourCommand();
+        ScheduleBotCommandsInterface listAllOfficeHour = new ListAllOfficeHourCommand();
+        ScheduleBotCommandsInterface deleteOfficeHour = new DeleteOfficeHourCommand();
+        ScheduleBotCommandsInterface rules = new RulesCommand();
+        ScheduleBotCommandsInterface alltaavailableofficehour =
+                new AllTaAvailableOfficeHourCommand();
+        ScheduleBotCommandsInterface staffdailyofficehour = new GetStaffDailyOfficeHourCommand();
 
         commandsHashMap.put(time.getName(), time);
         commandsHashMap.put(register.getName(), register);
@@ -71,5 +61,6 @@ public class MessageListener extends ListenerAdapter {
             scheduleBotCommands.onSlashCommand(event);
             return;
         }
+        log.warn("Could not find slash command handler for event name {}", event.getName());
     }
 }

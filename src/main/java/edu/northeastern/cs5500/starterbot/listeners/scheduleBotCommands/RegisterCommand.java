@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class RegisterCommand extends ScheduleBotCommandsWithRepositoryAbstract {
+public class RegisterCommand implements Command {
 
     @Override
     public String getName() {

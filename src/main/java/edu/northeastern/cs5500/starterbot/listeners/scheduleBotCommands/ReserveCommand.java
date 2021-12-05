@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class ReserveCommand extends ScheduleBotCommandsWithRepositoryAbstract {
+public class ReserveCommand implements Command {
 
     @Override
     public String getName() {

@@ -16,54 +16,7 @@ public class NEUUser implements Model {
     private boolean isStaff = false;
     @Nonnull private String userName;
     @Nonnull private String nuid;
-    private boolean isVaccinated = false;
-    private boolean symptom = false;
-    // @Nonnull private Schedule schedule;
+    private boolean vaccinated = false;
+    private boolean symptomatic = false;
     List<OfficeHour> involvedOfficeHours = new ArrayList<OfficeHour>();
-    // PriorityQueue<OfficeHour> involvedOfficeHours =
-    //         new PriorityQueue<OfficeHour>(
-    //                 new Comparator<OfficeHour>() {
-    //                     @Override
-    //                     public int compare(OfficeHour officeHourA, OfficeHour officeHourB) {
-    //                         int a = setDayOfWeek(officeHourA);
-    //                         int b = setDayOfWeek(officeHourB);
-    //                         if (a != b) {
-    //                             return a - b;
-    //                         } else {
-    //                             return officeHourA.getStartHour() - officeHourB.getStartHour();
-    //                         }
-    //                     }
-
-    //                     private int setDayOfWeek(OfficeHour officeHour) {
-    //                         int result;
-    //                         DayOfWeek dayOfWeek = officeHour.getDayOfWeek();
-    //                         switch (dayOfWeek) {
-    //                             case SUNDAY:
-    //                                 result = 0;
-    //                                 break;
-    //                             case MONDAY:
-    //                                 result = 1;
-    //                                 break;
-    //                             case TUESDAY:
-    //                                 result = 2;
-    //                                 break;
-    //                             case WEDNESDAY:
-    //                                 result = 3;
-    //                                 break;
-    //                             case THURSDAY:
-    //                                 result = 4;
-    //                                 break;
-    //                             case FRIDAY:
-    //                                 result = 5;
-    //                                 break;
-    //                             case SATURDAY:
-    //                                 result = 6;
-    //                                 break;
-    //                             default:
-    //                                 result = -1;
-    //                                 break;
-    //                         }
-    //                         return result;
-    //                     }
-    //                 });
 }

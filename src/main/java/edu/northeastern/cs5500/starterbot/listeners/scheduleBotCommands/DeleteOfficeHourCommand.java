@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class DeleteOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAbstract {
+public class DeleteOfficeHourCommand implements Command {
 
     @Override
     public String getName() {
