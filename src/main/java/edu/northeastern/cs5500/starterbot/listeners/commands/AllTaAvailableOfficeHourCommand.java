@@ -1,4 +1,4 @@
-package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
+package edu.northeastern.cs5500.starterbot.listeners.commands;
 
 import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;

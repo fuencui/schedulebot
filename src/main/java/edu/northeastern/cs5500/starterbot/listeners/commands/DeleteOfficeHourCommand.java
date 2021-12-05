@@ -1,44 +1,33 @@
-package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
+package edu.northeastern.cs5500.starterbot.listeners.commands;
 
-import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.DayOfWeek;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
-import edu.northeastern.cs5500.starterbot.model.OfficeHourType;
-import java.util.Collections;
 import java.util.List;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class CreateOfficeHourCommand implements Command {
+public class DeleteOfficeHourCommand implements Command {
 
     @Override
     public String getName() {
-        return "createofficehour";
-    }
-
-    DiscordIdController discordIdController;
-
-    public CreateOfficeHourCommand(DiscordIdController discordIdController) {
-        this.discordIdController = discordIdController;
+        return "deleteofficehour";
     }
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        // TODO: use multiple parameters
-        String[] infoArr = event.getOption("content").getAsString().split("\\s+");
-        String dayOfWeekString = infoArr[0].toUpperCase();
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
-
         if (!user.isStaff()) {
-            event.reply("Only instructor can create office hour.").queue();
+            event.reply("Only instructors can delete (their own) office hours.").queue();
             return;
         }
-        final DayOfWeek dayOfWeek;
-        // TODO: convert this into a switch/case statement
+
+        String[] infoArr = event.getOption("content").getAsString().split("\\s+");
+        String dayOfWeekString = infoArr[0].toUpperCase();
+        DayOfWeek dayOfWeek;
         if (dayOfWeekString.equals("SUNDAY")) {
             dayOfWeek = DayOfWeek.SUNDAY;
         } else if (dayOfWeekString.equals("MONDAY")) {
@@ -57,40 +46,42 @@ public class CreateOfficeHourCommand implements Command {
             event.reply("Please enter a valid day.").queue();
             return;
         }
-
         int startTime = Integer.parseInt(infoArr[1]);
         int endTime = Integer.parseInt(infoArr[2]);
+        StringBuilder sb = new StringBuilder();
+        sb.append(
+                dayOfWeek.toString()
+                        + " from "
+                        + startTime
+                        + ":00 to "
+                        + endTime
+                        + ":00."); // same format as OfficeHour's toString()
 
-        OfficeHour officeHour =
-                new OfficeHour(
-                        dayOfWeek,
-                        new OfficeHourType("Online"),
-                        startTime,
-                        endTime,
-                        user.getNuid());
-        List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
-        involvedOfficeHours.add(officeHour);
-        Collections.sort(involvedOfficeHours);
-        discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
-
-        event.reply(
-                        "Success! You created an office hour at "
-                                + officeHour.getDayOfWeek().toString()
-                                + " from "
-                                + startTime
-                                + " to "
-                                + endTime)
-                .queue();
+        List<OfficeHour> officeHourList = user.getInvolvedOfficeHours();
+        for (int i = 0; i < officeHourList.size(); i++) {
+            if (officeHourList.get(i).toString().equals(sb.toString())
+                    && officeHourList.get(i).getAttendeeNUID() == null) {
+                officeHourList.remove(i);
+                user.setInvolvedOfficeHours(officeHourList);
+                userRepository.update(user);
+                event.reply("This office hour has been deleted.").queue();
+                return;
+            } else if (officeHourList.get(i).toString().equals(sb.toString())
+                    && officeHourList.get(i).getAttendeeNUID() != null) {
+                event.reply("Reserved office hours cannot be deleted.").queue();
+                return;
+            }
+        }
+        event.reply("This office hour has not been created.").queue();
         return;
     }
 
     @Override
     public CommandData getCommandData() {
-        return new CommandData("createofficehour", "Create a new office hour session")
+        return new CommandData("deleteofficehour", "Delete your office hour if it is not reserved")
                 .addOptions(
                         new OptionData(
                                         OptionType.STRING,
-                                        // TODO: this should reflect the actual parameter request
                                         "content",
                                         "format: {DayofWeek} {StartTime} {EndTime}")
                                 .setRequired(true));

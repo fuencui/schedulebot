@@ -1,4 +1,4 @@
-package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
+package edu.northeastern.cs5500.starterbot.listeners.commands;
 
 import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
@@ -55,7 +55,7 @@ public class VaccinateCommand implements Command {
                         new OptionData(
                                         OptionType.BOOLEAN,
                                         "vaccine_status",
-                                        "true if you are vaccinated; false if you are not")
+                                        "true if you are vaccinated or have a waiver; false if you are not")
                                 .setRequired(false));
     }
 }

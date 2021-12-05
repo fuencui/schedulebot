@@ -5,10 +5,13 @@ import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import lombok.Data;
 
 @Data
@@ -16,7 +19,7 @@ public class DiscordIdController {
     @Nonnull private GenericRepository<DiscordIdLog> discordIdLogRepository;
     @Nonnull private GenericRepository<NEUUser> neuUserRepository;
 
-    public String getNuidByDiscordiD(String discordId) {
+    public String getNuidByDiscordId(String discordId) {
         if (!discordIdLogRepository.getAll().isEmpty()) {
             for (DiscordIdLog d : discordIdLogRepository.getAll()) {
                 if (d.getDiscordId().equals(discordId)) {
@@ -39,8 +42,8 @@ public class DiscordIdController {
     }
 
     public NEUUser getNEUUser(String discordId) {
-        String nuid = this.getNuidByDiscordiD(discordId);
-        for (NEUUser user : this.neuUserRepository.getAll()) {
+        String nuid = getNuidByDiscordId(discordId);
+        for (NEUUser user : neuUserRepository.getAll()) {
             if (user.getNuid().equals(nuid)) {
                 return user;
             }
@@ -48,9 +51,9 @@ public class DiscordIdController {
         return null;
     }
 
-    public Deque<NEUUser> getAllTAProf() {
+    public Collection<NEUUser> getAllTAProf() {
         Deque<NEUUser> taProfList = new ArrayDeque<>();
-        for (NEUUser user : this.neuUserRepository.getAll()) {
+        for (NEUUser user : neuUserRepository.getAll()) {
             if (user.isStaff() == true) {
                 taProfList.add(user);
             }
@@ -78,5 +81,15 @@ public class DiscordIdController {
         user.setInvolvedOfficeHours(involvedOfficeHours);
         neuUserRepository.update(user);
         return true;
+    }
+
+    @Nullable
+    public NEUUser getNEUUserByNuid(String nuid) {
+        for (NEUUser user : this.neuUserRepository.getAll()) {
+            if (user.getNuid().equals(nuid)) {
+                return user;
+            }
+        }
+        return null;
     }
 }
