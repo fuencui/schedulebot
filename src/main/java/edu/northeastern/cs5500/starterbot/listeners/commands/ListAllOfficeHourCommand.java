@@ -1,12 +1,19 @@
-package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
+package edu.northeastern.cs5500.starterbot.listeners.commands;
 
+import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import java.util.List;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
-public class ListAllOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAbstract {
+public class ListAllOfficeHourCommand implements Command {
+
+    private DiscordIdController discordIdController;
+
+    public ListAllOfficeHourCommand(DiscordIdController discordIdController) {
+        this.discordIdController = discordIdController;
+    }
 
     @Override
     public String getName() {

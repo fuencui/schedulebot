@@ -1,17 +1,24 @@
-package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
+package edu.northeastern.cs5500.starterbot.listeners.commands;
 
+import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
-import java.util.Deque;
+import java.util.Collection;
 import java.util.List;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
-public class AllTaAvailableOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAbstract {
+public class AllTaAvailableOfficeHourCommand implements Command {
 
     @Override
     public String getName() {
-        return "alltaavailableofficehour";
+        return "getavailable";
+    }
+
+    private DiscordIdController discordIdController;
+
+    public AllTaAvailableOfficeHourCommand(DiscordIdController discordIdController) {
+        this.discordIdController = discordIdController;
     }
 
     @Override
@@ -27,15 +34,14 @@ public class AllTaAvailableOfficeHourCommand extends ScheduleBotCommandsWithRepo
             event.reply("TA/Prof please use other command-line function to check").queue();
             return;
         }
-        Deque<NEUUser> taProfList = discordIdController.getAllTAProf();
+        Collection<NEUUser> taProfList = discordIdController.getAllTAProf();
         if (taProfList.isEmpty()) {
             event.reply("No office hours available").queue();
             return;
         }
 
         sb.append("Available Office Hours: \n");
-        while (!taProfList.isEmpty()) {
-            NEUUser taProf = taProfList.poll();
+        for (NEUUser taProf : taProfList) {
             List<OfficeHour> officeHourList = taProf.getInvolvedOfficeHours();
             if (officeHourList == null || officeHourList.isEmpty()) {
                 continue;
@@ -59,6 +65,6 @@ public class AllTaAvailableOfficeHourCommand extends ScheduleBotCommandsWithRepo
 
     @Override
     public CommandData getCommandData() {
-        return new CommandData("alltaavailableofficehour", "List all Available TA office Hour.");
+        return new CommandData(getName(), "List all Available TA office Hour.");
     }
 }

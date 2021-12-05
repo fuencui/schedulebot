@@ -1,5 +1,6 @@
-package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
+package edu.northeastern.cs5500.starterbot.listeners.commands;
 
+import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.DayOfWeek;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
@@ -11,15 +12,22 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAbstract {
+public class CreateOfficeHourCommand implements Command {
 
     @Override
     public String getName() {
         return "createofficehour";
     }
 
+    DiscordIdController discordIdController;
+
+    public CreateOfficeHourCommand(DiscordIdController discordIdController) {
+        this.discordIdController = discordIdController;
+    }
+
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
+        // TODO: use the individual parameters instead of splitting an array
         String[] infoArr = event.getOption("content").getAsString().split("\\s+");
         String dayOfWeekString = infoArr[0].toUpperCase();
         String discordId = event.getUser().getId();
@@ -29,7 +37,8 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
             event.reply("Only instructor can create office hour.").queue();
             return;
         }
-        DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
+        final DayOfWeek dayOfWeek;
+        // TODO: convert this into a switch/case statement
         if (dayOfWeekString.equals("SUNDAY")) {
             dayOfWeek = DayOfWeek.SUNDAY;
         } else if (dayOfWeekString.equals("MONDAY")) {
@@ -63,8 +72,7 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
             List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
             involvedOfficeHours.add(officeHour);
             Collections.sort(involvedOfficeHours);
-            user.setInvolvedOfficeHours(involvedOfficeHours);
-            userRepository.update(user);
+            discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
 
             event.reply(
                             "Success! You created an office hour at "
@@ -93,8 +101,7 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
                 List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
                 involvedOfficeHours.add(officeHour);
                 Collections.sort(involvedOfficeHours);
-                user.setInvolvedOfficeHours(involvedOfficeHours);
-                userRepository.update(user);
+                discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
 
                 sb.append(
                         "You created an office hour at "
@@ -117,7 +124,20 @@ public class CreateOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
                 .addOptions(
                         new OptionData(
                                         OptionType.STRING,
-                                        "content",
+                                        // TODO: this should reflect the actual parameter description
+                                        "dayofweek",
+                                        "format: {DayofWeek} {StartTime} {EndTime}")
+                                .setRequired(true),
+                                new OptionData(
+                                        OptionType.INTEGER,
+                                        // TODO: this should reflect the actual parameter description
+                                        "start",
+                                        "format: {DayofWeek} {StartTime} {EndTime}")
+                                .setRequired(true),
+                                new OptionData(
+                                        OptionType.INTEGER,
+                                        // TODO: this should reflect the actual parameter description
+                                        "end",
                                         "format: {DayofWeek} {StartTime} {EndTime}")
                                 .setRequired(true));
     }

@@ -1,5 +1,6 @@
-package edu.northeastern.cs5500.starterbot.listeners.scheduleBotCommands;
+package edu.northeastern.cs5500.starterbot.listeners.commands;
 
+import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.DayOfWeek;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
@@ -9,7 +10,13 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class DeleteOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAbstract {
+public class DeleteOfficeHourCommand implements Command {
+
+    private DiscordIdController discordIdController;
+
+    public DeleteOfficeHourCommand(DiscordIdController discordIdController) {
+        this.discordIdController = discordIdController;
+    }
 
     @Override
     public String getName() {
@@ -62,8 +69,7 @@ public class DeleteOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
             if (officeHourList.get(i).toString().equals(sb.toString())
                     && officeHourList.get(i).getAttendeeNUID() == null) {
                 officeHourList.remove(i);
-                user.setInvolvedOfficeHours(officeHourList);
-                userRepository.update(user);
+                discordIdController.setInvolvedOfficeHours(discordId, officeHourList);
                 event.reply("This office hour has been deleted.").queue();
                 return;
             } else if (officeHourList.get(i).toString().equals(sb.toString())
@@ -80,6 +86,7 @@ public class DeleteOfficeHourCommand extends ScheduleBotCommandsWithRepositoryAb
     public CommandData getCommandData() {
         return new CommandData("deleteofficehour", "Delete your office hour if it is not reserved")
                 .addOptions(
+                        // TODO: create one option for each value you're requesting
                         new OptionData(
                                         OptionType.STRING,
                                         "content",
