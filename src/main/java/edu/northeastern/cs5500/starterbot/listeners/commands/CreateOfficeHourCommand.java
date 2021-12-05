@@ -27,7 +27,7 @@ public class CreateOfficeHourCommand implements Command {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        // TODO: use multiple parameters
+        // TODO: use the individual parameters instead of splitting an array
         String[] infoArr = event.getOption("content").getAsString().split("\\s+");
         String dayOfWeekString = infoArr[0].toUpperCase();
         String discordId = event.getUser().getId();
@@ -124,8 +124,20 @@ public class CreateOfficeHourCommand implements Command {
                 .addOptions(
                         new OptionData(
                                         OptionType.STRING,
-                                        // TODO: this should reflect the actual parameter request
-                                        "content",
+                                        // TODO: this should reflect the actual parameter description
+                                        "dayofweek",
+                                        "format: {DayofWeek} {StartTime} {EndTime}")
+                                .setRequired(true),
+                                new OptionData(
+                                        OptionType.INTEGER,
+                                        // TODO: this should reflect the actual parameter description
+                                        "start",
+                                        "format: {DayofWeek} {StartTime} {EndTime}")
+                                .setRequired(true),
+                                new OptionData(
+                                        OptionType.INTEGER,
+                                        // TODO: this should reflect the actual parameter description
+                                        "end",
                                         "format: {DayofWeek} {StartTime} {EndTime}")
                                 .setRequired(true));
     }

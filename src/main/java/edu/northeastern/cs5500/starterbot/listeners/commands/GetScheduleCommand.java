@@ -5,6 +5,7 @@ import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import java.awt.Color;
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -154,7 +155,7 @@ public class GetScheduleCommand implements Command {
         if (userOfficeHourList == null || userOfficeHourList.isEmpty()) {
             eb.setDescription("(no office hours for the week)");
         } else {
-            // TODO: Sort this by day of week
+            Collections.sort(userOfficeHourList);
             for (OfficeHour hour : userOfficeHourList) {
                 eb.addField(
                         hour.getDayOfWeek().toString(),

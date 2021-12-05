@@ -32,8 +32,7 @@ public class SymptomCommand implements Command {
         StringBuilder responseBuilder = new StringBuilder();
         responseBuilder.append("You are experiencing covid symptom: ");
         responseBuilder.append(covidsymptom.getAsBoolean());
-        // TODO: create a controller method to encapsulate this
-        // userRepository.update(user);
+        // discordIdController.updateSymptomatic(discordId, symptomatic)
         event.reply(responseBuilder.toString()).queue();
         return;
     }

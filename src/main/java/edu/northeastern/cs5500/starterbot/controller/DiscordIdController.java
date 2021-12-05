@@ -86,6 +86,17 @@ public class DiscordIdController {
         return true;
     }
 
+    public boolean updateSymptomatic(String discordId, boolean symptomatic) {
+        NEUUser user = getNEUUser(discordId);
+        if (user == null) {
+            return false;
+        }
+
+        user.setSymptomatic(symptomatic);
+        neuUserRepository.update(user);
+        return true;
+    }
+
     public boolean setInvolvedOfficeHours(String discordId, List<OfficeHour> involvedOfficeHours) {
         NEUUser user = getNEUUser(discordId);
         if (user == null) {

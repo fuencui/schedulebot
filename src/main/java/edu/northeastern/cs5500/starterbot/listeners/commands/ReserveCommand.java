@@ -107,12 +107,10 @@ public class ReserveCommand implements Command {
 
         if (successFlag) {
             // If input office hour exist and available, update repository.
-            taProf.setInvolvedOfficeHours(taProfOfficeHours);
+            discordIdController.setInvolvedOfficeHours(taProf.getDiscordId(), taProfOfficeHours);
             Collections.sort(userOfficeHour);
+            discordIdController.setInvolvedOfficeHours(user.getDiscordId(), userOfficeHour);
             user.setInvolvedOfficeHours(userOfficeHour);
-            // TODO: Create a controller method to encapsulate this
-            // userRepository.update(taProf);
-            // userRepository.update(user);
             event.reply("You made a reservation!").queue();
             return;
         } else {
