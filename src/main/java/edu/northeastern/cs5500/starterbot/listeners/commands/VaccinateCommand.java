@@ -27,10 +27,11 @@ public class VaccinateCommand implements Command {
         final boolean vaccinationStatus;
 
         String discordId = event.getUser().getId();
-        
+
         if (vaccinated != null) {
             if (!discordIdController.updateVaccination(discordId, vaccinated.getAsBoolean())) {
-                event.reply("Unable to determine your vaccination status; have you registered?").queue();
+                event.reply("Unable to determine your vaccination status; have you registered?")
+                        .queue();
                 return;
             }
             vaccinationStatus = vaccinated.getAsBoolean();
@@ -48,9 +49,7 @@ public class VaccinateCommand implements Command {
 
     @Override
     public CommandData getCommandData() {
-        return new CommandData(
-                        "vaccinated",
-                        "Get or set your own vaccination status.")
+        return new CommandData("vaccinated", "Get or set your own vaccination status.")
                 .addOptions(
                         new OptionData(
                                         OptionType.BOOLEAN,

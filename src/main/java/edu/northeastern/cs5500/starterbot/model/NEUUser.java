@@ -13,9 +13,10 @@ import org.bson.types.ObjectId;
 @NoArgsConstructor
 public class NEUUser implements Model {
     private ObjectId id;
-    private boolean isStaff = false;
     @Nonnull private String userName;
     @Nonnull private String nuid;
+    @Nonnull private String discordId;
+    private boolean staff = false;
     private boolean vaccinated = false;
     private boolean symptomatic = false;
     List<OfficeHour> involvedOfficeHours = new ArrayList<OfficeHour>();

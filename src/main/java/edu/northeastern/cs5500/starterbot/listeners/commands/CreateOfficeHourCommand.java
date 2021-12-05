@@ -101,8 +101,7 @@ public class CreateOfficeHourCommand implements Command {
                 List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
                 involvedOfficeHours.add(officeHour);
                 Collections.sort(involvedOfficeHours);
-                user.setInvolvedOfficeHours(involvedOfficeHours);
-                userRepository.update(user);
+                discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
 
                 sb.append(
                         "You created an office hour at "

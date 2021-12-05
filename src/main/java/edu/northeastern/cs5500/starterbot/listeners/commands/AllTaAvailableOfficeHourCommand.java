@@ -3,7 +3,7 @@ package edu.northeastern.cs5500.starterbot.listeners.commands;
 import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
-import java.util.Deque;
+import java.util.Collection;
 import java.util.List;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -34,15 +34,14 @@ public class AllTaAvailableOfficeHourCommand implements Command {
             event.reply("TA/Prof please use other command-line function to check").queue();
             return;
         }
-        Deque<NEUUser> taProfList = discordIdController.getAllTAProf();
+        Collection<NEUUser> taProfList = discordIdController.getAllTAProf();
         if (taProfList.isEmpty()) {
             event.reply("No office hours available").queue();
             return;
         }
 
         sb.append("Available Office Hours: \n");
-        while (!taProfList.isEmpty()) {
-            NEUUser taProf = taProfList.poll();
+        for (NEUUser taProf : taProfList) {
             List<OfficeHour> officeHourList = taProf.getInvolvedOfficeHours();
             if (officeHourList == null || officeHourList.isEmpty()) {
                 continue;

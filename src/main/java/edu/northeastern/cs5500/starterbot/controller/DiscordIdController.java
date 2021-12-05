@@ -1,6 +1,5 @@
 package edu.northeastern.cs5500.starterbot.controller;
 
-import edu.northeastern.cs5500.starterbot.model.DiscordIdLog;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import edu.northeastern.cs5500.starterbot.repository.GenericRepository;
@@ -8,34 +7,29 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import lombok.Data;
-
-@Data
+@Slf4j
+@RequiredArgsConstructor
 public class DiscordIdController {
-    @Nonnull private GenericRepository<DiscordIdLog> discordIdLogRepository;
     @Nonnull private GenericRepository<NEUUser> neuUserRepository;
 
     public String getNuidByDiscordId(String discordId) {
-        if (!discordIdLogRepository.getAll().isEmpty()) {
-            for (DiscordIdLog d : discordIdLogRepository.getAll()) {
-                if (d.getDiscordId().equals(discordId)) {
-                    return d.getNuid();
-                }
+        for (NEUUser user : neuUserRepository.getAll()) {
+            if (user.getDiscordId().equals(discordId)) {
+                return user.getNuid();
             }
         }
-        return "null";
+        return null;
     }
 
     public boolean isDiscordIdRegistered(String discordId) {
-        if (!discordIdLogRepository.getAll().isEmpty()) {
-            for (DiscordIdLog d : discordIdLogRepository.getAll()) {
-                if (d.getDiscordId().equals(discordId)) {
-                    return true;
-                }
+        for (NEUUser user : neuUserRepository.getAll()) {
+            if (user.getDiscordId().equals(discordId)) {
+                return true;
             }
         }
         return false;
@@ -49,6 +43,26 @@ public class DiscordIdController {
             }
         }
         return null;
+    }
+
+    public NEUUser createNEUUser(String name, String nuid, String role) {
+        boolean isStaff = false;
+        switch (role) {
+            case "ta":
+            case "professor":
+                isStaff = true;
+                break;
+            case "student":
+                isStaff = false;
+                break;
+            default:
+                log.warn("Invalid role requested: {}", role);
+                return null;
+        }
+
+        NEUUser user = new NEUUser(name, nuid, role);
+        user.setStaff(isStaff);
+        return neuUserRepository.add(user);
     }
 
     public Collection<NEUUser> getAllTAProf() {

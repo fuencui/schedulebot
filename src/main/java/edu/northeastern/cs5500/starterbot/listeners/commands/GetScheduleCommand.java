@@ -1,5 +1,6 @@
 package edu.northeastern.cs5500.starterbot.listeners.commands;
 
+import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import java.awt.Color;
@@ -18,6 +19,12 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class GetScheduleCommand implements Command {
+
+    private DiscordIdController discordIdController;
+
+    public GetScheduleCommand(DiscordIdController discordIdController) {
+        this.discordIdController = discordIdController;
+    }
 
     @Override
     public String getName() {
@@ -153,9 +160,9 @@ public class GetScheduleCommand implements Command {
                         hour.getDayOfWeek().toString(),
                         String.format(
                                 "%d:00 to %d:00; %s",
-                                officeHour.getStartHour(),
-                                officeHour.getEndHour(),
-                                officeHour.getOfficeHourType().getTypeName()),
+                                hour.getStartHour(),
+                                hour.getEndHour(),
+                                hour.getOfficeHourType().getTypeName()),
                         false);
             }
         }

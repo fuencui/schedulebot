@@ -1,5 +1,6 @@
 package edu.northeastern.cs5500.starterbot.listeners.commands;
 
+import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -9,6 +10,12 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class SymptomCommand implements Command {
 
+    private DiscordIdController discordIdController;
+
+    public SymptomCommand(DiscordIdController discordIdController) {
+        this.discordIdController = discordIdController;
+    }
+
     @Override
     public String getName() {
         return "covidsymptom";
@@ -16,15 +23,17 @@ public class SymptomCommand implements Command {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
+        // TODO: handle the parameter not being passed since it is an optional parameter
         OptionMapping covidsymptom = event.getOption("covidsymptom");
 
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
-        user.setSymptom(covidsymptom.getAsBoolean());
+        user.setSymptomatic(covidsymptom.getAsBoolean());
         StringBuilder responseBuilder = new StringBuilder();
         responseBuilder.append("You are experiencing covid symptom: ");
         responseBuilder.append(covidsymptom.getAsBoolean());
-        userRepository.update(user);
+        // TODO: create a controller method to encapsulate this
+        // userRepository.update(user);
         event.reply(responseBuilder.toString()).queue();
         return;
     }
