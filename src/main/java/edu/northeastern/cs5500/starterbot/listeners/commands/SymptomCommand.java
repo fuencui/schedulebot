@@ -25,16 +25,37 @@ public class SymptomCommand implements Command {
     public void onSlashCommand(SlashCommandEvent event) {
         // TODO: handle the parameter not being passed since it is an optional parameter
         OptionMapping covidsymptom = event.getOption("covidsymptom");
+        final boolean covidSymptomStatus;
 
         String discordId = event.getUser().getId();
-        NEUUser user = discordIdController.getNEUUser(discordId);
-        user.setSymptomatic(covidsymptom.getAsBoolean());
-        StringBuilder responseBuilder = new StringBuilder();
-        responseBuilder.append("You are experiencing covid symptom: ");
-        responseBuilder.append(covidsymptom.getAsBoolean());
-        // discordIdController.updateSymptomatic(discordId, symptomatic)
-        event.reply(responseBuilder.toString()).queue();
-        return;
+
+        if (covidsymptom != null) {
+            if (!discordIdController.updateSymptomatic(discordId, covidsymptom.getAsBoolean())) {
+                event.reply(
+                                "Unable to determine whether you have covid symptom or not; have you registered?")
+                        .queue();
+                return;
+            }
+            covidSymptomStatus = covidsymptom.getAsBoolean();
+        } else {
+            NEUUser user = discordIdController.getNEUUser(discordId);
+            covidSymptomStatus = user.isSymptomatic();
+        }
+
+        if (covidSymptomStatus) {
+            event.reply("Your are experiencing covid symptom").queue();
+        } else {
+            event.reply("Your are NOT experiencing covid symptom").queue();
+        }
+
+        // NEUUser user = discordIdController.getNEUUser(discordId);
+        // user.setSymptomatic(covidsymptom.getAsBoolean());
+        // StringBuilder responseBuilder = new StringBuilder();
+        // responseBuilder.append("You are experiencing covid symptom: ");
+        // responseBuilder.append(covidsymptom.getAsBoolean());
+        // // discordIdController.updateSymptomatic(discordId, symptomatic)
+        // event.reply(responseBuilder.toString()).queue();
+        // return;
     }
 
     @Override
