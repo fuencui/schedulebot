@@ -27,9 +27,10 @@ public class CreateOfficeHourCommand implements Command {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        // TODO: use the individual parameters instead of splitting an array
-        String[] infoArr = event.getOption("content").getAsString().split("\\s+");
-        String dayOfWeekString = infoArr[0].toUpperCase();
+        /** TODO: use the individual parameters instead of splitting an array */
+        String dayOfWeekString = event.getOption("dayofweek").getAsString();
+        int startTime = Integer.parseInt(event.getOption("start").getAsString());
+        int endTime = Integer.parseInt(event.getOption("end").getAsString());
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
 
@@ -37,29 +38,38 @@ public class CreateOfficeHourCommand implements Command {
             event.reply("Only instructor can create office hour.").queue();
             return;
         }
-        final DayOfWeek dayOfWeek;
-        // TODO: convert this into a switch/case statement
-        if (dayOfWeekString.equals("SUNDAY")) {
-            dayOfWeek = DayOfWeek.SUNDAY;
-        } else if (dayOfWeekString.equals("MONDAY")) {
-            dayOfWeek = DayOfWeek.MONDAY;
-        } else if (dayOfWeekString.equals("TUESDAY")) {
-            dayOfWeek = DayOfWeek.TUESDAY;
-        } else if (dayOfWeekString.equals("WEDNESDAY")) {
-            dayOfWeek = DayOfWeek.WEDNESDAY;
-        } else if (dayOfWeekString.equals("THURSDAY")) {
-            dayOfWeek = DayOfWeek.THURSDAY;
-        } else if (dayOfWeekString.equals("FRIDAY")) {
-            dayOfWeek = DayOfWeek.FRIDAY;
-        } else if (dayOfWeekString.equals("SATURDAY")) {
-            dayOfWeek = DayOfWeek.SATURDAY;
-        } else {
-            event.reply("Please enter a valid day.").queue();
-            return;
-        }
 
-        int startTime = Integer.parseInt(infoArr[1]);
-        int endTime = Integer.parseInt(infoArr[2]);
+        /** TODO: 字符串处理 第一位大写 比如 Monday @番茄 */
+        
+        final DayOfWeek dayOfWeek;
+
+        /** TODO: convert this into a switch/case statement */
+        switch (dayOfWeekString) {
+            case "Monday":
+                dayOfWeek = DayOfWeek.MONDAY;
+                break;
+            case "Tuesday":
+                dayOfWeek = DayOfWeek.TUESDAY;
+                break;
+            case "Wednesday":
+                dayOfWeek = DayOfWeek.WEDNESDAY;
+                break;
+            case "Thursday":
+                dayOfWeek = DayOfWeek.THURSDAY;
+                break;
+            case "Friday":
+                dayOfWeek = DayOfWeek.FRIDAY;
+                break;
+            case "Saturday":
+                dayOfWeek = DayOfWeek.SATURDAY;
+                break;
+            case "Sunday":
+                dayOfWeek = DayOfWeek.SUNDAY;
+                break;
+            default:
+                event.reply("Please enter a valid day").queue();
+                return;
+        }
 
         if (Math.abs(endTime - startTime) == 1) {
             OfficeHour officeHour =
@@ -120,25 +130,34 @@ public class CreateOfficeHourCommand implements Command {
 
     @Override
     public CommandData getCommandData() {
-        return new CommandData("createofficehour", "Create a new office hour session")
+        return new CommandData(getName(), "Create a new office hour session")
                 .addOptions(
                         new OptionData(
                                         OptionType.STRING,
-                                        // TODO: this should reflect the actual parameter description
+                                        /**
+                                         * TODO: this should reflect the actual parameter
+                                         * description
+                                         */
                                         "dayofweek",
-                                        "format: {DayofWeek} {StartTime} {EndTime}")
+                                        "Enter day of the week")
                                 .setRequired(true),
-                                new OptionData(
+                        new OptionData(
                                         OptionType.INTEGER,
-                                        // TODO: this should reflect the actual parameter description
+                                        /**
+                                         * TODO: this should reflect the actual parameter
+                                         * description
+                                         */
                                         "start",
-                                        "format: {DayofWeek} {StartTime} {EndTime}")
+                                        "Enter start time")
                                 .setRequired(true),
-                                new OptionData(
+                        new OptionData(
                                         OptionType.INTEGER,
-                                        // TODO: this should reflect the actual parameter description
+                                        /**
+                                         * TODO: this should reflect the actual parameter
+                                         * description
+                                         */
                                         "end",
-                                        "format: {DayofWeek} {StartTime} {EndTime}")
+                                        "Enter end time")
                                 .setRequired(true));
     }
 }

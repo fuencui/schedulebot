@@ -19,7 +19,7 @@ public class DiscordIdController {
 
     public String getNuidByDiscordId(String discordId) {
         for (NEUUser user : neuUserRepository.getAll()) {
-            if (user.getDiscordId().equals(discordId)) {
+            if (user.getDiscordId() != null && user.getDiscordId().equals(discordId)) {
                 return user.getNuid();
             }
         }
@@ -28,7 +28,7 @@ public class DiscordIdController {
 
     public boolean isDiscordIdRegistered(String discordId) {
         for (NEUUser user : neuUserRepository.getAll()) {
-            if (user.getDiscordId().equals(discordId)) {
+            if (user.getDiscordId() != null && user.getDiscordId().equals(discordId)) {
                 return true;
             }
         }
@@ -45,7 +45,7 @@ public class DiscordIdController {
         return null;
     }
 
-    public NEUUser createNEUUser(String name, String nuid, String role) {
+    public NEUUser createNEUUser(String name, String nuid, String role, String discordId) {
         boolean isStaff = false;
         switch (role) {
             case "ta":
@@ -60,7 +60,7 @@ public class DiscordIdController {
                 return null;
         }
 
-        NEUUser user = new NEUUser(name, nuid, role);
+        NEUUser user = new NEUUser(name, nuid, discordId);
         user.setStaff(isStaff);
         return neuUserRepository.add(user);
     }
