@@ -32,19 +32,16 @@ public class CreateOfficeHourCommand implements Command {
         String dayOfWeekString = event.getOption("dayofweek").getAsString();
         int startTime = Integer.parseInt(event.getOption("start").getAsString());
         int endTime = Integer.parseInt(event.getOption("end").getAsString());
-     
+
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
-        
 
         if (!user.isStaff()) {
             event.reply("Only instructor can create office hour.").queue();
             return;
         }
 
-
         /** TODO: 字符串处理 第一位大写 比如 Monday @番茄 */
-        
         final DayOfWeek dayOfWeek;
 
         /** TODO: convert this into a switch/case statement */
