@@ -1,7 +1,12 @@
 package edu.northeastern.cs5500.starterbot.listeners.commands;
 
+import com.mongodb.lang.Nullable;
 import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -20,31 +25,58 @@ public class RegisterCommand implements Command {
         return "register";
     }
 
+    Message getReply(
+            @Nullable NEUUser user,
+            @Nullable String name,
+            @Nullable String nuid,
+            @Nullable String role,
+            String discordId) {
+        MessageBuilder mb = new MessageBuilder();
+        if (user == null) {
+            return mb.setEmbed(createAUser(name, nuid, role, discordId)).build();
+        } else {
+            return mb.setEmbed(comeBackUser(user)).build();
+        }
+    }
+
+    MessageEmbed comeBackUser(NEUUser user) {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle(String.format("Welcome back %s:", user.getUserName()));
+        eb.setDescription("You have already been registered");
+        return eb.build();
+    }
+
+    MessageEmbed createAUser(
+            @Nullable String name, @Nullable String nuid, @Nullable String role, String discordId) {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Creating A New User");
+        NEUUser user = discordIdController.createNEUUser(name, nuid, role, discordId);
+        if (user == null) {
+            eb.setDescription("Invalid role; must be one of student/ta/professor");
+            eb.setDescription("Please try again");
+        } else {
+            eb.addField("Name", String.format("Name: %s", user.getUserName()), true);
+            eb.addField("Nuid", String.format("Nuid: %s", user.getNuid()), true);
+        }
+        return eb.build();
+    }
+
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         String name = event.getOption("name").getAsString();
         String nuid = event.getOption("nuid").getAsString();
         String role = event.getOption("role").getAsString().toLowerCase();
         String discordId = event.getUser().getId();
+        NEUUser user;
 
-        final NEUUser user;
         if (discordIdController.isDiscordIdRegistered(discordId)) {
             user = discordIdController.getNEUUser(discordId);
-            // TODO: Make this into an embed
-            event.reply(
-                            "Welcome back:  "
-                                    + user.getUserName()
-                                    + "\n(You have already been registered)")
-                    .queue();
-            return;
+        } else {
+            user = null;
         }
 
-        user = discordIdController.createNEUUser(name, nuid, role);
-
-        if (user == null) {
-            event.reply("Invalid role; must be one of student/ta/professor").queue();
-        }
-        event.reply("You have been registered!").queue();
+        final Message reply = getReply(user, name, nuid, role, discordId);
+        event.reply(reply).queue();
     }
 
     @Override

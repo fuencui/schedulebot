@@ -27,13 +27,12 @@ public class CreateOfficeHourCommand implements Command {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        /**
-         * TODO: use the individual parameters instead of splitting an array
-         */
 
-        String dayOfWeekString = event.getOption("dayOfWeek").getAsString();
-        String start = event.getOption("startTime").getAsString();
-        String end = event.getOption("endTime").getAsString();
+        /** TODO: use the individual parameters instead of splitting an array */
+        String dayOfWeekString = event.getOption("dayofweek").getAsString();
+        int startTime = Integer.parseInt(event.getOption("start").getAsString());
+        int endTime = Integer.parseInt(event.getOption("end").getAsString());
+     
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
         
@@ -43,34 +42,38 @@ public class CreateOfficeHourCommand implements Command {
             return;
         }
 
-        // final DayOfWeek dayOfWeek;
-        DayOfWeek dayOfWeek;
-        /**
-         * TODO: convert this into a switch/case statement
-         */
+
+        /** TODO: 字符串处理 第一位大写 比如 Monday @番茄 */
+        
+        final DayOfWeek dayOfWeek;
+
+        /** TODO: convert this into a switch/case statement */
         switch (dayOfWeekString) {
             case "Monday":
                 dayOfWeek = DayOfWeek.MONDAY;
+                break;
             case "Tuesday":
                 dayOfWeek = DayOfWeek.TUESDAY;
+                break;
             case "Wednesday":
                 dayOfWeek = DayOfWeek.WEDNESDAY;
+                break;
             case "Thursday":
                 dayOfWeek = DayOfWeek.THURSDAY;
+                break;
             case "Friday":
                 dayOfWeek = DayOfWeek.FRIDAY;
+                break;
             case "Saturday":
                 dayOfWeek = DayOfWeek.SATURDAY;
+                break;
             case "Sunday":
                 dayOfWeek = DayOfWeek.SUNDAY;
+                break;
             default:
                 event.reply("Please enter a valid day").queue();
                 return;
         }
-
-
-        int startTime = Integer.parseInt(start);
-        int endTime = Integer.parseInt(end);
 
         if (Math.abs(endTime - startTime) == 1) {
             OfficeHour officeHour =
@@ -131,32 +134,33 @@ public class CreateOfficeHourCommand implements Command {
 
     @Override
     public CommandData getCommandData() {
-        return new CommandData("createofficehour", "Create a new office hour session")
+        return new CommandData(getName(), "Create a new office hour session")
                 .addOptions(
                         new OptionData(
                                         OptionType.STRING,
                                         /**
-                                         * TODO: this should reflect the actual parameter description
+                                         * TODO: this should reflect the actual parameter
+                                         * description
                                          */
-                                        "dayOfWeek",
+                                        "dayofweek",
                                         "Enter day of the week")
                                 .setRequired(true),
                         new OptionData(
                                         OptionType.INTEGER,
                                         /**
-                                         * TODO: this should reflect the actual parameter description
+                                         * TODO: this should reflect the actual parameter
+                                         * description
                                          */
-                                         
-                                        "startTime",
+                                        "start",
                                         "Enter start time")
                                 .setRequired(true),
                         new OptionData(
                                         OptionType.INTEGER,
                                         /**
-                                         * TODO: this should reflect the actual parameter description
+                                         * TODO: this should reflect the actual parameter
+                                         * description
                                          */
-                                        
-                                        "endTime",
+                                        "end",
                                         "Enter end time")
                                 .setRequired(true));
     }

@@ -179,6 +179,6 @@ public class GetScheduleCommand implements Command {
                         new OptionData(
                                 OptionType.STRING,
                                 "dayofweek",
-                                "one of Monday/Tuesday/Wednesday/Thursday/Friday/Saturday/Sunday; if empty, the entire week is displayed"));
+                                "Monday/Tuesday/Wednesday/Thursday/Friday/Saturday/Sunday; if empty, the entire week is displayed"));
     }
 }
