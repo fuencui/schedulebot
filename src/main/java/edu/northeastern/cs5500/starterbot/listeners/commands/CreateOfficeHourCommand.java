@@ -8,6 +8,7 @@ import edu.northeastern.cs5500.starterbot.model.OfficeHourType;
 import java.util.Collections;
 import java.util.List;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -25,27 +26,41 @@ public class CreateOfficeHourCommand implements Command {
         this.discordIdController = discordIdController;
     }
 
+    static String toTitleCase(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(str.substring(0, 1).toUpperCase());
+        sb.append(str.substring(1, str.length()).toLowerCase());
+        return sb.toString();
+    }
+
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
 
         /** TODO: use the individual parameters instead of splitting an array */
-        String dayOfWeekString = event.getOption("dayofweek").getAsString();
+        // String dayOfWeekString = event.getOption("dayofweek").getAsString();
         int startTime = Integer.parseInt(event.getOption("start").getAsString());
         int endTime = Integer.parseInt(event.getOption("end").getAsString());
-     
+
         String discordId = event.getUser().getId();
         NEUUser user = discordIdController.getNEUUser(discordId);
-        
+        final OptionMapping dayOfWeekOption = event.getOption("dayofweek");
 
         if (!user.isStaff()) {
             event.reply("Only instructor can create office hour.").queue();
             return;
         }
 
-
         /** TODO: 字符串处理 第一位大写 比如 Monday @番茄 */
-        
         final DayOfWeek dayOfWeek;
+        String dayOfWeekString;
+        if (dayOfWeekOption == null) {
+            dayOfWeekString = null;
+        } else {
+            dayOfWeekString = toTitleCase(dayOfWeekOption.getAsString());
+        }
 
         /** TODO: convert this into a switch/case statement */
         switch (dayOfWeekString) {
