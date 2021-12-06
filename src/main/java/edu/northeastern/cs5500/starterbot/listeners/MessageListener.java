@@ -31,8 +31,8 @@ public class MessageListener extends ListenerAdapter {
         Command deleteOfficeHour = new DeleteOfficeHourCommand(discordIdController);
         Command allTaAvailableOfficeHour = new AllTaAvailableOfficeHourCommand(discordIdController);
         Command staffDailyOfficeHour = new GetScheduleCommand(discordIdController);
-        Command allOfficeHours = new AllOfficeHoursCommand(discordIdController);
         Command getSchedule = new GetScheduleCommand(discordIdController);
+        Command checkInPersonCommand = new CheckInPersonOfficeHourCommand(discordIdController);
 
         commandsHashMap.put(time.getName(), time);
         commandsHashMap.put(register.getName(), register);
@@ -44,8 +44,8 @@ public class MessageListener extends ListenerAdapter {
         commandsHashMap.put(deleteOfficeHour.getName(), deleteOfficeHour);
         commandsHashMap.put(allTaAvailableOfficeHour.getName(), allTaAvailableOfficeHour);
         commandsHashMap.put(staffDailyOfficeHour.getName(), staffDailyOfficeHour);
-        commandsHashMap.put(allOfficeHours.getName(), allOfficeHours);
         commandsHashMap.put(getSchedule.getName(), getSchedule);
+        commandsHashMap.put(checkInPersonCommand.getName(), checkInPersonCommand);
     }
 
     public Collection<CommandData> getCommandData() {

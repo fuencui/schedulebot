@@ -107,7 +107,7 @@ public class GetScheduleCommand implements Command {
         if (dayOfWeekOption == null) {
             dayOfWeek = null;
         } else {
-            dayOfWeek = toTitleCase(dayOfWeekOption.getAsString());
+            dayOfWeek = toTitleCase(dayOfWeekOption.getAsString().toLowerCase());
         }
 
         final Message reply = getReply(user, dayOfWeek);
@@ -142,10 +142,6 @@ public class GetScheduleCommand implements Command {
         if (officeHour == null) {
             eb.setDescription("(no appointments for this day)");
         } else {
-            // eb.addField("Beginning Hour", String.format("%d:00", officeHour.getStartHour()),
-            // false);
-            // eb.addField("Ending Hour", String.format("%d:00", officeHour.getEndHour()), false);
-            // eb.addField("Type", officeHour.getOfficeHourType().getTypeName(), false);
             Collections.sort(userOfficeHourList);
             for (OfficeHour hour : userOfficeHourList) {
                 if (hour.getDayOfWeek().toString().toLowerCase().equals(dayOfWeek.toLowerCase()))
