@@ -40,10 +40,11 @@ public class VaccinateCommand implements Command {
             vaccinationStatus = user.isVaccinated();
         }
 
+        discordIdController.updateVaccination(discordId, vaccinated.getAsBoolean());
         if (vaccinationStatus) {
             event.reply("Your status is: vaccinated").queue();
         } else {
-            event.reply("Your status is: not vaccinated").queue();
+            event.reply("Your status is: NOT vaccinated").queue();
         }
     }
 
@@ -53,7 +54,7 @@ public class VaccinateCommand implements Command {
                 .addOptions(
                         new OptionData(
                                         OptionType.BOOLEAN,
-                                        "vaccine_status",
+                                        "vaccinated",
                                         "true if you are vaccinated or have a waiver; false if you are not")
                                 .setRequired(false));
     }
