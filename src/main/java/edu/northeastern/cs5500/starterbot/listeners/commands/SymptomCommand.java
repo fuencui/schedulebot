@@ -42,20 +42,12 @@ public class SymptomCommand implements Command {
             covidSymptomStatus = user.isSymptomatic();
         }
 
+        discordIdController.updateSymptomatic(discordId, covidsymptom.getAsBoolean());
         if (covidSymptomStatus) {
             event.reply("Your are experiencing covid symptom").queue();
         } else {
             event.reply("Your are NOT experiencing covid symptom").queue();
         }
-
-        // NEUUser user = discordIdController.getNEUUser(discordId);
-        // user.setSymptomatic(covidsymptom.getAsBoolean());
-        // StringBuilder responseBuilder = new StringBuilder();
-        // responseBuilder.append("You are experiencing covid symptom: ");
-        // responseBuilder.append(covidsymptom.getAsBoolean());
-        // // discordIdController.updateSymptomatic(discordId, symptomatic)
-        // event.reply(responseBuilder.toString()).queue();
-        // return;
     }
 
     @Override
