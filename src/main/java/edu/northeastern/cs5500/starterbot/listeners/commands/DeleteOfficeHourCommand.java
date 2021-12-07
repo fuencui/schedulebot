@@ -6,6 +6,7 @@ import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import java.util.List;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -23,6 +24,16 @@ public class DeleteOfficeHourCommand implements Command {
         return "deleteofficehour";
     }
 
+    static String toTitleCase(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(str.substring(0, 1).toUpperCase());
+        sb.append(str.substring(1, str.length()).toLowerCase());
+        return sb.toString();
+    }
+
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         String discordId = event.getUser().getId();
@@ -32,48 +43,58 @@ public class DeleteOfficeHourCommand implements Command {
             return;
         }
 
-        String[] infoArr = event.getOption("content").getAsString().split("\\s+");
-        String dayOfWeekString = infoArr[0].toUpperCase();
-        DayOfWeek dayOfWeek;
-        if (dayOfWeekString.equals("SUNDAY")) {
-            dayOfWeek = DayOfWeek.SUNDAY;
-        } else if (dayOfWeekString.equals("MONDAY")) {
-            dayOfWeek = DayOfWeek.MONDAY;
-        } else if (dayOfWeekString.equals("TUESDAY")) {
-            dayOfWeek = DayOfWeek.TUESDAY;
-        } else if (dayOfWeekString.equals("WEDNESDAY")) {
-            dayOfWeek = DayOfWeek.WEDNESDAY;
-        } else if (dayOfWeekString.equals("THURSDAY")) {
-            dayOfWeek = DayOfWeek.THURSDAY;
-        } else if (dayOfWeekString.equals("FRIDAY")) {
-            dayOfWeek = DayOfWeek.FRIDAY;
-        } else if (dayOfWeekString.equals("SATURDAY")) {
-            dayOfWeek = DayOfWeek.SATURDAY;
+        final OptionMapping dayOfWeekOption = event.getOption("dayofweek");
+        final DayOfWeek dayOfWeek;
+        String dayOfWeekString;
+        if (dayOfWeekOption == null) {
+            dayOfWeekString = null;
         } else {
-            event.reply("Please enter a valid day.").queue();
-            return;
+            dayOfWeekString = toTitleCase(dayOfWeekOption.getAsString());
         }
-        int startTime = Integer.parseInt(infoArr[1]);
-        int endTime = Integer.parseInt(infoArr[2]);
-        StringBuilder sb = new StringBuilder();
-        sb.append(
-                dayOfWeek.toString()
-                        + " from "
-                        + startTime
-                        + ":00 to "
-                        + endTime
-                        + ":00."); // same format as OfficeHour's toString()
-
-        List<OfficeHour> officeHourList = user.getInvolvedOfficeHours();
-        for (int i = 0; i < officeHourList.size(); i++) {
-            if (officeHourList.get(i).toString().equals(sb.toString())
-                    && officeHourList.get(i).getAttendeeNUID() == null) {
-                officeHourList.remove(i);
-                discordIdController.setInvolvedOfficeHours(discordId, officeHourList);
-                event.reply("This office hour has been deleted.").queue();
+        switch (dayOfWeekString) {
+            case "Monday":
+                dayOfWeek = DayOfWeek.MONDAY;
+                break;
+            case "Tuesday":
+                dayOfWeek = DayOfWeek.TUESDAY;
+                break;
+            case "Wednesday":
+                dayOfWeek = DayOfWeek.WEDNESDAY;
+                break;
+            case "Thursday":
+                dayOfWeek = DayOfWeek.THURSDAY;
+                break;
+            case "Friday":
+                dayOfWeek = DayOfWeek.FRIDAY;
+                break;
+            case "Saturday":
+                dayOfWeek = DayOfWeek.SATURDAY;
+                break;
+            case "Sunday":
+                dayOfWeek = DayOfWeek.SUNDAY;
+                break;
+            default:
+                event.reply("Please enter a valid day").queue();
                 return;
-            } else if (officeHourList.get(i).toString().equals(sb.toString())
-                    && officeHourList.get(i).getAttendeeNUID() != null) {
+        }
+
+        int startHour = Integer.parseInt(event.getOption("start").getAsString());
+        int endHour = Integer.parseInt(event.getOption("end").getAsString());
+
+        List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
+        for (int i = 0; i < involvedOfficeHours.size(); i++) {
+            if (involvedOfficeHours.get(i).getDayOfWeek().equals(dayOfWeek)
+                    && involvedOfficeHours.get(i).getStartHour() == startHour
+                    && involvedOfficeHours.get(i).getEndHour() == endHour
+                    && involvedOfficeHours.get(i).getAttendeeNUID() == null) {
+                involvedOfficeHours.remove(i);
+                discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
+                event.reply("You have successfully deleted this office hour!").queue();
+                return;
+            } else if (involvedOfficeHours.get(i).getDayOfWeek().equals(dayOfWeek)
+                    && involvedOfficeHours.get(i).getStartHour() == startHour
+                    && involvedOfficeHours.get(i).getEndHour() == endHour
+                    && involvedOfficeHours.get(i).getAttendeeNUID() != null) {
                 event.reply("Reserved office hours cannot be deleted.").queue();
                 return;
             }
@@ -84,13 +105,13 @@ public class DeleteOfficeHourCommand implements Command {
 
     @Override
     public CommandData getCommandData() {
-        return new CommandData("deleteofficehour", "Delete your office hour if it is not reserved")
+        return new CommandData(getName(), "Delete your office hour if it is not reserved")
                 .addOptions(
-                        // TODO: create one option for each value you're requesting
-                        new OptionData(
-                                        OptionType.STRING,
-                                        "content",
-                                        "format: {DayofWeek} {StartTime} {EndTime}")
+                        new OptionData(OptionType.STRING, "dayofweek", "Enter day of the week")
+                                .setRequired(true),
+                        new OptionData(OptionType.INTEGER, "start", "Enter start time")
+                                .setRequired(true),
+                        new OptionData(OptionType.INTEGER, "end", "Enter end time")
                                 .setRequired(true));
     }
 }
