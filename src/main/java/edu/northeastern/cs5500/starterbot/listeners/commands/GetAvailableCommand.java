@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class AllTaAvailableOfficeHourCommand extends GetScheduleCommand {
+public class GetAvailableCommand extends GetScheduleCommand {
 
     @Override
     public String getName() {
@@ -24,7 +24,7 @@ public class AllTaAvailableOfficeHourCommand extends GetScheduleCommand {
 
     private DiscordIdController discordIdController;
 
-    public AllTaAvailableOfficeHourCommand(DiscordIdController discordIdController) {
+    public GetAvailableCommand(DiscordIdController discordIdController) {
         super(discordIdController);
         this.discordIdController = discordIdController;
     }
@@ -121,8 +121,7 @@ public class AllTaAvailableOfficeHourCommand extends GetScheduleCommand {
     @Override
     public CommandData getCommandData() {
         return new CommandData(
-                        getName(),
-                        "Get your scheduled office hours for the week or a given day (TA/Professor only).")
+                        getName(), "Get available hours for the week or a given day (For Student).")
                 .addOptions(
                         new OptionData(
                                 OptionType.STRING,

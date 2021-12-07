@@ -21,26 +21,22 @@ public class MessageListener extends ListenerAdapter {
 
     public MessageListener(DiscordIdController discordIdController) {
         commandsHashMap = new HashMap<>();
-        Command time = new TimeCommand();
         Command register = new RegisterCommand(discordIdController);
         Command reserve = new ReserveCommand(discordIdController);
         Command vaccinate = new VaccinateCommand(discordIdController);
         Command covidsymptom = new SymptomCommand(discordIdController);
         Command createOfficeHour = new CreateOfficeHourCommand(discordIdController);
-        Command listAllOfficeHour = new ListAllOfficeHourCommand(discordIdController);
         Command deleteOfficeHour = new DeleteOfficeHourCommand(discordIdController);
-        Command allTaAvailableOfficeHour = new AllTaAvailableOfficeHourCommand(discordIdController);
+        Command allTaAvailableOfficeHour = new GetAvailableCommand(discordIdController);
         Command staffDailyOfficeHour = new GetScheduleCommand(discordIdController);
         Command getSchedule = new GetScheduleCommand(discordIdController);
         Command checkInPersonCommand = new CheckInPersonOfficeHourCommand(discordIdController);
 
-        commandsHashMap.put(time.getName(), time);
         commandsHashMap.put(register.getName(), register);
         commandsHashMap.put(reserve.getName(), reserve);
         commandsHashMap.put(vaccinate.getName(), vaccinate);
         commandsHashMap.put(covidsymptom.getName(), covidsymptom);
         commandsHashMap.put(createOfficeHour.getName(), createOfficeHour);
-        commandsHashMap.put(listAllOfficeHour.getName(), listAllOfficeHour);
         commandsHashMap.put(deleteOfficeHour.getName(), deleteOfficeHour);
         commandsHashMap.put(allTaAvailableOfficeHour.getName(), allTaAvailableOfficeHour);
         commandsHashMap.put(staffDailyOfficeHour.getName(), staffDailyOfficeHour);
