@@ -13,6 +13,10 @@ plugins {
 
     // Spotless to format code easily
     id "com.diffplug.spotless"
+
+    // ./gradlew clean test jacocoTestReport
+    // to get a junit coverage report
+    id 'jacoco'
 }
 
 repositories {
