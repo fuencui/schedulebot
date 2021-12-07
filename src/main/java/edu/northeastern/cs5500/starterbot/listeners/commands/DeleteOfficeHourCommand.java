@@ -89,7 +89,7 @@ public class DeleteOfficeHourCommand implements Command {
                     && involvedOfficeHours.get(i).getAttendeeNUID() == null) {
                 involvedOfficeHours.remove(i);
                 discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
-                event.reply("This office hour has been deleted.").queue();
+                event.reply("You have successfully deleted this office hour!").queue();
                 return;
             } else if (involvedOfficeHours.get(i).getDayOfWeek().equals(dayOfWeek)
                     && involvedOfficeHours.get(i).getStartHour() == startHour
