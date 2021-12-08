@@ -94,15 +94,17 @@ public class CancelOfficeHourCommand implements Command {
                                                     involvedOfficeHours.get(i).getHostNUID())
                                             .getUserName())
                             .equals(staffName)) {
-                NEUUser staff = discordIdController
-                                .getNEUUserByNuid(involvedOfficeHours.get(i).getHostNUID());
+                NEUUser staff =
+                        discordIdController.getNEUUserByNuid(
+                                involvedOfficeHours.get(i).getHostNUID());
                 List<OfficeHour> staffOfficeHours = staff.getInvolvedOfficeHours();
                 for (int j = 0; j < staffOfficeHours.size(); j++) {
                     if (staffOfficeHours.get(j).getDayOfWeek().equals(dayOfWeek)
                             && staffOfficeHours.get(j).getStartHour() == startHour
                             && staffOfficeHours.get(j).getEndHour() == endHour) {
                         staffOfficeHours.get(j).setAttendeeNUID(null);
-                        discordIdController.setInvolvedOfficeHours(staff.getDiscordId(), staffOfficeHours);
+                        discordIdController.setInvolvedOfficeHours(
+                                staff.getDiscordId(), staffOfficeHours);
                     }
                     involvedOfficeHours.remove(i);
                     discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
