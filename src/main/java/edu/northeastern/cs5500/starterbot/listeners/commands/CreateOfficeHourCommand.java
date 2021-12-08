@@ -5,8 +5,14 @@ import edu.northeastern.cs5500.starterbot.model.DayOfWeek;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
 import edu.northeastern.cs5500.starterbot.model.OfficeHourType;
+import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nonnull;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -38,22 +44,26 @@ public class CreateOfficeHourCommand implements Command {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-
-        /** TODO: use the individual parameters instead of splitting an array */
-        // String dayOfWeekString = event.getOption("dayofweek").getAsString();
         int startTime = Integer.parseInt(event.getOption("start").getAsString());
         int endTime = Integer.parseInt(event.getOption("end").getAsString());
-
-        String discordId = event.getUser().getId();
-        NEUUser user = discordIdController.getNEUUser(discordId);
         final OptionMapping dayOfWeekOption = event.getOption("dayofweek");
+        String discordId = event.getUser().getId();
 
+        final Message reply = getReply(dayOfWeekOption, startTime, endTime, discordId);
+        event.reply(reply).queue();
+    }
+
+    Message getReply(
+            @Nonnull OptionMapping dayOfWeekOption,
+            @Nonnull int startTime,
+            @Nonnull int endTime,
+            @Nonnull String discordId) {
+        MessageBuilder mb = new MessageBuilder();
+        NEUUser user = discordIdController.getNEUUser(discordId);
         if (!user.isStaff()) {
-            event.reply("Only instructor can create office hour.").queue();
-            return;
+            return mb.append("Only instructor can create office hour.").build();
         }
 
-        /** TODO: 字符串处理 第一位大写 比如 Monday @番茄 */
         final DayOfWeek dayOfWeek;
         String dayOfWeekString;
         if (dayOfWeekOption == null) {
@@ -62,7 +72,6 @@ public class CreateOfficeHourCommand implements Command {
             dayOfWeekString = toTitleCase(dayOfWeekOption.getAsString());
         }
 
-        /** TODO: convert this into a switch/case statement */
         switch (dayOfWeekString) {
             case "Monday":
                 dayOfWeek = DayOfWeek.MONDAY;
@@ -86,65 +95,89 @@ public class CreateOfficeHourCommand implements Command {
                 dayOfWeek = DayOfWeek.SUNDAY;
                 break;
             default:
-                event.reply("Please enter a valid day").queue();
-                return;
+                return mb.append("Please enter a valid day").build();
+        }
+
+        if (endTime - startTime < 0) {
+            int temp = startTime;
+            startTime = endTime;
+            endTime = temp;
         }
 
         if (Math.abs(endTime - startTime) == 1) {
+            return mb.setEmbed(createSingleOfficeHour(dayOfWeek, startTime, endTime, discordId))
+                    .build();
+        } else {
+            return mb.setEmbed(createMultipleOfficeHour(dayOfWeek, startTime, endTime, discordId))
+                    .build();
+        }
+    }
+
+    MessageEmbed createSingleOfficeHour(
+            DayOfWeek dayOfWeek, int startTime, int endTime, String discordId) {
+        NEUUser user = discordIdController.getNEUUser(discordId);
+        OfficeHour officeHour =
+                new OfficeHour(
+                        dayOfWeek,
+                        new OfficeHourType("Online"),
+                        startTime,
+                        endTime,
+                        user.getNuid());
+        List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
+        involvedOfficeHours.add(officeHour);
+        Collections.sort(involvedOfficeHours);
+        discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Create an office hour");
+        eb.setColor(Color.CYAN);
+        eb.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
+        eb.addField(
+                "OfficeHour",
+                ":partying_face:"
+                        + "Success! You created an office hour at "
+                        + officeHour.getDayOfWeek().toString().toLowerCase()
+                        + " from "
+                        + startTime
+                        + " to "
+                        + endTime,
+                true);
+        return eb.build();
+    }
+    ;
+
+    MessageEmbed createMultipleOfficeHour(
+            DayOfWeek dayOfWeek, int startTime, int endTime, String discordId) {
+        NEUUser user = discordIdController.getNEUUser(discordId);
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Create Multiple office hours");
+        eb.setColor(Color.CYAN);
+        eb.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
+        while (endTime - startTime > 0) {
             OfficeHour officeHour =
                     new OfficeHour(
                             dayOfWeek,
                             new OfficeHourType("Online"),
                             startTime,
-                            endTime,
+                            startTime + 1,
                             user.getNuid());
             List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
             involvedOfficeHours.add(officeHour);
             Collections.sort(involvedOfficeHours);
             discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
-
-            event.reply(
-                            "Success! You created an office hour at "
-                                    + officeHour.getDayOfWeek().toString().toLowerCase()
-                                    + " from "
-                                    + startTime
-                                    + " to "
-                                    + endTime)
-                    .queue();
-            return;
-        } else {
-            if (endTime - startTime < 0) {
-                int temp = startTime;
-                startTime = endTime;
-                endTime = temp;
-            }
-            StringBuilder sb = new StringBuilder();
-            while (endTime - startTime > 0) {
-                OfficeHour officeHour =
-                        new OfficeHour(
-                                dayOfWeek,
-                                new OfficeHourType("Online"),
-                                startTime,
-                                startTime + 1,
-                                user.getNuid());
-                List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
-                involvedOfficeHours.add(officeHour);
-                Collections.sort(involvedOfficeHours);
-                discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
-
-                sb.append(
-                        "You created an office hour at "
-                                + officeHour.getDayOfWeek().toString().toLowerCase()
-                                + " from "
-                                + startTime
-                                + " to "
-                                + (startTime + 1)
-                                + "\n");
-                startTime++;
-            }
-            event.reply("Success! " + sb.toString()).queue();
-            return;
+            int tempEndTime = startTime + 1;
+            eb.addField(
+                    "OfficeHour",
+                    ":partying_face:"
+                            + "You created an office hour at "
+                            + officeHour.getDayOfWeek().toString().toLowerCase()
+                            + " from "
+                            + startTime
+                            + " to "
+                            + tempEndTime,
+                    true);
+            startTime++;
         }
+        return eb.build();
     }
 
     @Override
