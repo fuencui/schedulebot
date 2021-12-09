@@ -27,6 +27,11 @@ public class GetScheduleCommand implements Command {
         this.discordIdController = discordIdController;
     }
 
+    /**
+     * Returns the command name as a string.
+     *
+     * @return The command name "schedule"
+     */
     @Override
     public String getName() {
         return "schedule";
@@ -57,6 +62,13 @@ public class GetScheduleCommand implements Command {
         return eb.build();
     }
 
+    /**
+     * Returns a String follows format: 1. First character is in upper case. 2. Rest of character is
+     * in lower case.
+     *
+     * @param str a String that need to format.
+     * @return a formatted String
+     */
     static String toTitleCase(@Nonnull String str) {
         if (str == null || str.isEmpty()) {
             return str;
@@ -72,13 +84,6 @@ public class GetScheduleCommand implements Command {
         if (user == null) {
             return mb.append("You are not registered; please try /register first.").build();
         }
-
-        if (user.isStaff() == false) {
-            return mb.append(
-                            "You are a student; this command is only useful for TAs and Professors.")
-                    .build();
-        }
-
         List<OfficeHour> userOfficeHourList = user.getInvolvedOfficeHours();
         if (userOfficeHourList == null || userOfficeHourList.isEmpty()) {
             return mb.append("You have no booked office hours for this week.").build();
@@ -114,6 +119,12 @@ public class GetScheduleCommand implements Command {
         event.reply(reply).queue();
     }
 
+    /**
+     * Check if the passed in String is valid day of week.
+     *
+     * @param dayOfWeek a String that need to be check.
+     * @return true if passed in String is valid; Otherwise false.
+     */
     boolean isValidDayOfWeek(String dayOfWeek) {
         switch (dayOfWeek) {
             case "Monday":
@@ -182,8 +193,7 @@ public class GetScheduleCommand implements Command {
     @Override
     public CommandData getCommandData() {
         return new CommandData(
-                        getName(),
-                        "Get your scheduled office hours for the week or a given day (TA/Professor only).")
+                        getName(), "Get your scheduled office hours for the week or a given day.")
                 .addOptions(
                         new OptionData(
                                 OptionType.STRING,
