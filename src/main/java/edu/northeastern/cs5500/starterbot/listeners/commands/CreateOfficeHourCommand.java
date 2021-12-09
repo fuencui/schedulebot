@@ -19,20 +19,40 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+/**
+ * CreateOfficeHourCommand is for user who's role is TA or Professor to create a Office Hour and
+ * update/add to their own OfficeHour list for student to reserve
+ */
 public class CreateOfficeHourCommand implements Command {
+    DiscordIdController discordIdController;
 
+    /**
+     * Returns the command name as a string.
+     *
+     * @return The command name "createofficehour"
+     */
     @Override
     public String getName() {
         return "createofficehour";
     }
 
-    DiscordIdController discordIdController;
-
+    /**
+     * Constructer createOfficeHourCommand has-a discordIdController
+     *
+     * @param discordIdController discordIdController is composition relationship with this class
+     */
     public CreateOfficeHourCommand(DiscordIdController discordIdController) {
         this.discordIdController = discordIdController;
     }
 
-    static String toTitleCase(String str) {
+    /**
+     * Returns a String follows format: 1. First character is in upper case. 2. Rest of character is
+     * in lower case.
+     *
+     * @param str a String that need to format.
+     * @return a formatted String
+     */
+    public String toTitleCase(String str) {
         if (str == null || str.isEmpty()) {
             return str;
         }
@@ -42,6 +62,11 @@ public class CreateOfficeHourCommand implements Command {
         return sb.toString();
     }
 
+    /**
+     * An interface method will be called by outside of this class
+     *
+     * @param event check java discord API event document
+     */
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         int startTime = Integer.parseInt(event.getOption("start").getAsString());
@@ -49,28 +74,40 @@ public class CreateOfficeHourCommand implements Command {
         final OptionMapping dayOfWeekOption = event.getOption("dayofweek");
         String discordId = event.getUser().getId();
 
-        final Message reply = getReply(dayOfWeekOption, startTime, endTime, discordId);
-        event.reply(reply).queue();
-    }
-
-    Message getReply(
-            @Nonnull OptionMapping dayOfWeekOption,
-            @Nonnull int startTime,
-            @Nonnull int endTime,
-            @Nonnull String discordId) {
-        MessageBuilder mb = new MessageBuilder();
-        NEUUser user = discordIdController.getNEUUser(discordId);
-        if (!user.isStaff()) {
-            return mb.append("Only instructor can create office hour.").build();
-        }
-
-        final DayOfWeek dayOfWeek;
         String dayOfWeekString;
         if (dayOfWeekOption == null) {
             dayOfWeekString = null;
         } else {
             dayOfWeekString = toTitleCase(dayOfWeekOption.getAsString());
         }
+
+        final Message reply = getReply(dayOfWeekString, startTime, endTime, discordId);
+        event.reply(reply).queue();
+    }
+
+    /**
+     * To build a Message for onSlashCommand method to reply Depending on the arguments, then decide
+     * what MessageEmbed method to call
+     *
+     * @param dayOfWeekString String of day of week example Monday
+     * @param startTime int of office hour start time
+     * @param endTime int of office hour end time
+     * @param discordId String of user discordId
+     * @return Message for onSlashCommand method
+     */
+    public Message getReply(
+            @Nonnull String dayOfWeekString,
+            @Nonnull int startTime,
+            @Nonnull int endTime,
+            @Nonnull String discordId) {
+        MessageBuilder mb = new MessageBuilder();
+
+        NEUUser user = discordIdController.getNEUUser(discordId);
+        if (!user.isStaff()) {
+            return mb.append("Only instructor can create office hour.").build();
+        }
+
+        final DayOfWeek dayOfWeek;
 
         switch (dayOfWeekString) {
             case "Monday":
@@ -113,6 +150,16 @@ public class CreateOfficeHourCommand implements Command {
         }
     }
 
+    /**
+     * To build a Embed for Message Update/add a single office hour to user's List Setup an advanced
+     * display format Auto-reverse if user input startTime and endTime reversely
+     *
+     * @param dayOfWeek enum of DayOfWeek
+     * @param startTime int of office hour start time
+     * @param endTime int of office hour end time
+     * @param discordId String of user discordId
+     * @return A MessageEmbed for Message method to build
+     */
     MessageEmbed createSingleOfficeHour(
             DayOfWeek dayOfWeek, int startTime, int endTime, String discordId) {
         NEUUser user = discordIdController.getNEUUser(discordId);
@@ -134,7 +181,7 @@ public class CreateOfficeHourCommand implements Command {
         eb.addField(
                 "OfficeHour",
                 ":partying_face:"
-                        + "Success! You created an office hour at "
+                        + "Success! You created an office hour on "
                         + officeHour.getDayOfWeek().toString().toLowerCase()
                         + " from "
                         + startTime
@@ -143,8 +190,17 @@ public class CreateOfficeHourCommand implements Command {
                 true);
         return eb.build();
     }
-    ;
 
+    /**
+     * To build a Embed for Message Update/add Multiple office hours to user's List Setup an
+     * advanced display format Auto-reverse if user input startTime and endTime reversely
+     *
+     * @param dayOfWeek enum of DayOfWeek
+     * @param startTime int of office hour start time
+     * @param endTime int of office hour end time
+     * @param discordId String of user discordId
+     * @return A MessageEmbed for Message method to build
+     */
     MessageEmbed createMultipleOfficeHour(
             DayOfWeek dayOfWeek, int startTime, int endTime, String discordId) {
         NEUUser user = discordIdController.getNEUUser(discordId);
@@ -168,7 +224,7 @@ public class CreateOfficeHourCommand implements Command {
             eb.addField(
                     "OfficeHour",
                     ":partying_face:"
-                            + "You created an office hour at "
+                            + "You created an office hour on "
                             + officeHour.getDayOfWeek().toString().toLowerCase()
                             + " from "
                             + startTime
@@ -180,36 +236,16 @@ public class CreateOfficeHourCommand implements Command {
         return eb.build();
     }
 
+    /** For Java Discord API in App.java to add commands */
     @Override
     public CommandData getCommandData() {
         return new CommandData(getName(), "Create a new office hour session")
                 .addOptions(
-                        new OptionData(
-                                        OptionType.STRING,
-                                        /**
-                                         * TODO: this should reflect the actual parameter
-                                         * description
-                                         */
-                                        "dayofweek",
-                                        "Enter day of the week")
+                        new OptionData(OptionType.STRING, "dayofweek", "Enter day of the week")
                                 .setRequired(true),
-                        new OptionData(
-                                        OptionType.INTEGER,
-                                        /**
-                                         * TODO: this should reflect the actual parameter
-                                         * description
-                                         */
-                                        "start",
-                                        "Enter start time")
+                        new OptionData(OptionType.INTEGER, "start", "Enter start time")
                                 .setRequired(true),
-                        new OptionData(
-                                        OptionType.INTEGER,
-                                        /**
-                                         * TODO: this should reflect the actual parameter
-                                         * description
-                                         */
-                                        "end",
-                                        "Enter end time")
+                        new OptionData(OptionType.INTEGER, "end", "Enter end time")
                                 .setRequired(true));
     }
 }
