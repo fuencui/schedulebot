@@ -19,6 +19,9 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+/**
+ * This class is for command /reserve, reserve office hour for students
+ */
 public class ReserveCommand implements Command {
 
     private DiscordIdController discordIdController;
@@ -27,11 +30,20 @@ public class ReserveCommand implements Command {
         this.discordIdController = discordIdController;
     }
 
+    /**
+     * Get name of the command
+     * @return String, command name
+     */
     @Override
     public String getName() {
         return "reserve";
     }
 
+    /**
+     * Convert string to title case
+     * @param str string needs to be converted
+     * @return title case string
+     */
     static String toTitleCase(@Nonnull String str) {
         if (str == null || str.isEmpty()) {
             return str;
@@ -42,7 +54,12 @@ public class ReserveCommand implements Command {
         return sb.toString();
     }
 
-    boolean isValidDayOfWeek(String dayOfWeek) {
+    /**
+     * Check if the input day of week is valid
+     * @param dayOfWeek String, inputed dayofweek
+     * @return Boolean, true if vaid
+     */
+    Boolean isValidDayOfWeek(String dayOfWeek) {
         switch (dayOfWeek) {
             case "Monday":
             case "Tuesday":
@@ -57,16 +74,32 @@ public class ReserveCommand implements Command {
         }
     }
 
-    boolean isValidType(String type) {
+    /**
+     * Check if the input meeting type is valid
+     * @param type String, nputed type
+     * @return
+     */
+    Boolean isValidType(String type) {
         switch (type) {
             case "Inperson":
-            case "Remote":
+            case "Online":
                 return true;
             default:
                 return false;
         }
     }
 
+    /**
+     * Check edge cases: non-registers, non-students, request inperson appointment: non-vaccine, having symptoms
+     * Make appointment if passes all edge cases, then reply messages to Discord
+     * @param user NEUUser, student user
+     * @param dayOfWeek String, inputted day of week
+     * @param type String, inputted appointment type
+     * @param startTime Integer, inputted start hour
+     * @param endTime Integer, inputted end hour
+     * @param staffName String, inputted staff name
+     * @return Message, messages which indicate if the reservation successfully made or need further information
+     */
     Message getReply(
             @Nullable NEUUser user,
             @Nonnull String dayOfWeek,
@@ -98,6 +131,89 @@ public class ReserveCommand implements Command {
                 .build();
     }
 
+    /**
+     * Helper function for getReserveReply, check if inputted staff is valid
+     * @param taProfList Collection<NEUUser>, list of registered staff
+     * @param staffName String, inputted staff name
+     * @return NEUUser, matched staff
+     */
+    NEUUser checkNoStaff(Collection<NEUUser> taProfList, String staffName) {
+        for (NEUUser neuUser : taProfList) {
+            if (toTitleCase(neuUser.getUserName()).equals(staffName)) {
+                return neuUser;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Helper function for getReserveReply, check if the student has already made an appointment at same time slot
+     * @param dayOfWeek String, inputted day of week
+     * @param startTime Integer, inputted start hour
+     * @param endTime Integer, inputted end hour
+     * @param user NEUUser, student user who made the request
+     * @return Boolean, true if student has duplicate office hour
+     */
+    Boolean checkDuplicateOfficeHour(
+            String dayOfWeek, Integer startTime, Integer endTime, NEUUser user) {
+        List<OfficeHour> userOfficeHour = user.getInvolvedOfficeHours();
+        for (OfficeHour officeHour : userOfficeHour) {
+            if (officeHour.getDayOfWeek().toString().equals(dayOfWeek)
+                    && officeHour.getStartHour() == startTime
+                    && officeHour.getEndHour() == endTime) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Helper function for getReserveReply, check if there is a matching office hour as requested, if there is matching one, make reservation
+     * @param taProf NEUUser, matched staff as requested
+     * @param dayOfWeek String, inputted day of week
+     * @param startTime Integer, inputted start hour
+     * @param endTime Integer, inputted end hour
+     * @param type String, inputted appointment type
+     * @param user NEUUser, student user who made the request
+     * @return Boolean, true if there is a matching office hour and make reservation
+     */
+    Boolean checkMatchingOH(
+            NEUUser taProf,
+            String dayOfWeek,
+            Integer startTime,
+            Integer endTime,
+            String type,
+            NEUUser user) {
+        for (OfficeHour officeHour : taProf.getInvolvedOfficeHours()) {
+            if (officeHour.getDayOfWeek().toString().equals(dayOfWeek)
+                    && officeHour.getStartHour() == startTime
+                    && officeHour.getEndHour() == endTime) {
+                officeHour.setOfficeHourType(new OfficeHourType(type));
+                officeHour.setAttendeeNUID(user.getNuid());
+                user.getInvolvedOfficeHours().add(officeHour);
+                discordIdController.setInvolvedOfficeHours(
+                        taProf.getDiscordId(), taProf.getInvolvedOfficeHours());
+                taProf.setInvolvedOfficeHours(taProf.getInvolvedOfficeHours());
+                Collections.sort(user.getInvolvedOfficeHours());
+                discordIdController.setInvolvedOfficeHours(
+                        user.getDiscordId(), user.getInvolvedOfficeHours());
+                user.setInvolvedOfficeHours(user.getInvolvedOfficeHours());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Make valid appointment, and reply message accordingly
+     * @param type String, inputted appointment type
+     * @param dayOfWeek String, inputted day of week
+     * @param startTime Integer, inputted start time
+     * @param endTime Integer, inputted end time
+     * @param staffName String, inputted staff name
+     * @param user String, student user who made the request
+     * @return MessageEmbed, reply messages accordingly
+     */
     MessageEmbed getReserveReply(
             String type,
             String dayOfWeek,
@@ -114,50 +230,20 @@ public class ReserveCommand implements Command {
                             "No office hours available right now, please check with the instructors")
                     .build();
         }
-        for (NEUUser neuUser : taProfList) {
-            if (toTitleCase(neuUser.getUserName()).equals(staffName)) {
-                taProf = neuUser;
-                break;
-            }
-        }
+        taProf = checkNoStaff(taProfList, staffName);
         if (taProf == null) {
-            return eb.setDescription("Unable to find the TA/Professor name.").build();
+            return eb.setDescription("Unable to find the TA/Professor name as requested, try another staff by checking /getavailable").build();
         }
-        List<OfficeHour> taProfOfficeHours = taProf.getInvolvedOfficeHours();
-        List<OfficeHour> userOfficeHour = user.getInvolvedOfficeHours();
-        // Check if the user has a duplicate office hour
-        for (OfficeHour officeHour : userOfficeHour) {
-            if (officeHour.getDayOfWeek().toString().equals(dayOfWeek)
-                    && officeHour.getStartHour() == startTime
-                    && officeHour.getEndHour() == endTime) {
-                return eb.setDescription(
-                                "You already have a reservation on "
-                                        + String.format(
-                                                "%s, from %s:00 to %s:00, make sure to be here on time",
-                                                dayOfWeek, startTime, endTime))
-                        .build();
-            }
-        }
-        // successFlag is to check if the input office hour exist.
-        boolean successFlag = false;
-        for (OfficeHour officeHour : taProfOfficeHours) {
-            if (officeHour.getDayOfWeek().toString().equals(dayOfWeek)
-                    && officeHour.getStartHour() == startTime
-                    && officeHour.getEndHour() == endTime) {
-                officeHour.setOfficeHourType(new OfficeHourType(type));
-                officeHour.setAttendeeNUID(user.getNuid());
-                userOfficeHour.add(officeHour);
-                successFlag = true;
-                break;
-            }
+        if (checkDuplicateOfficeHour(dayOfWeek, startTime, endTime, user)) {
+            return eb.setDescription(
+                            "You already have a reservation on "
+                                    + String.format(
+                                            "%s, from %s:00 to %s:00, make sure to be here on time",
+                                            dayOfWeek, startTime, endTime))
+                    .build();
         }
 
-        if (successFlag) {
-            // If input office hour exist and available, update repository.
-            discordIdController.setInvolvedOfficeHours(taProf.getDiscordId(), taProfOfficeHours);
-            Collections.sort(userOfficeHour);
-            discordIdController.setInvolvedOfficeHours(user.getDiscordId(), userOfficeHour);
-            user.setInvolvedOfficeHours(userOfficeHour);
+        if (checkMatchingOH(taProf, dayOfWeek, startTime, endTime, type, user)) {
             return eb.setDescription(
                             "You have successfully scheduled a office hour appointment with: "
                                     + staffName
@@ -167,14 +253,17 @@ public class ReserveCommand implements Command {
                     .build();
         } else {
             return eb.setDescription(
-                            "There is no matching office hour, try another time by checking the /ListAllOfficeHour")
+                            "There is no matching office hour, try another time by checking the /getavailable")
                     .build();
         }
     }
 
+    /**
+     * Take inputs from command, check the validity of the inputs, and made reply accordingly
+     * @param event SlashCommandEvent
+     */
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        // to do
         NEUUser user = discordIdController.getNEUUser(event.getUser().getId());
         String dayOfWeek = event.getOption("dayofweek").getAsString();
         String type = event.getOption("type").getAsString();
@@ -190,12 +279,16 @@ public class ReserveCommand implements Command {
                     .queue();
         }
         if (!isValidType(type)) {
-            event.reply("Please try again, enter a valid meeting type: Remote/Inperson").queue();
+            event.reply("Please try again, enter a valid meeting type: Online/Inperson").queue();
         }
         Message reply = getReply(user, dayOfWeek, type, startTime, endTime, staffName);
         event.reply(reply).queue();
     }
 
+    /**
+     * Get command data
+     * @return
+     */
     @Override
     public CommandData getCommandData() {
         return new CommandData("reserve", "Make a reservation")
