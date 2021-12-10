@@ -10,20 +10,37 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-
+/**
+ * This class represents the /cancelofficehour function for students' use.
+ */
 public class CancelOfficeHourCommand implements Command {
 
     private DiscordIdController discordIdController;
 
+    /**
+     * Constructs a CancelOfficeHourCommand.
+     * 
+     * @param discordIdController
+     */
     public CancelOfficeHourCommand(DiscordIdController discordIdController) {
         this.discordIdController = discordIdController;
     }
 
+    /**
+     * Returns the command name as a string.
+     */
     @Override
     public String getName() {
         return "cancelofficehour";
     }
 
+    /**
+     * Returns a String with its first character in upper case, followed by rest of characters
+     * in lower case.
+     *
+     * @param str a String
+     * @return a formatted String
+     */
     static String toTitleCase(String str) {
         if (str == null || str.isEmpty()) {
             return str;
@@ -34,6 +51,11 @@ public class CancelOfficeHourCommand implements Command {
         return sb.toString();
     }
 
+    /**
+     * Performs a slash command method.
+     *
+     * @param event an event from Discord's slash command
+     */
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         String discordId = event.getUser().getId();
@@ -125,6 +147,11 @@ public class CancelOfficeHourCommand implements Command {
         return;
     }
 
+    /**
+     * Constructs a command from guided user input.
+     *
+     * @return CommandData
+     */
     @Override
     public CommandData getCommandData() {
         return new CommandData(getName(), "Cancel the office hour you reserved")

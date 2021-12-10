@@ -10,20 +10,37 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-
+/**
+ * This class represents the /deleteofficehour function for instructors' use.
+ */
 public class DeleteOfficeHourCommand implements Command {
 
     private DiscordIdController discordIdController;
 
+    /**
+     * Constructs a DeleteOfficeHourCommand.
+     * 
+     * @param discordIdController
+     */
     public DeleteOfficeHourCommand(DiscordIdController discordIdController) {
         this.discordIdController = discordIdController;
     }
 
+    /**
+     * Returns the command name as a string.
+     */
     @Override
     public String getName() {
         return "deleteofficehour";
     }
 
+    /**
+     * Returns a String with its first character in upper case, followed by rest of characters
+     * in lower case.
+     *
+     * @param str a String
+     * @return a formatted String
+     */
     static String toTitleCase(String str) {
         if (str == null || str.isEmpty()) {
             return str;
@@ -33,7 +50,12 @@ public class DeleteOfficeHourCommand implements Command {
         sb.append(str.substring(1, str.length()).toLowerCase());
         return sb.toString();
     }
-
+    
+    /**
+     * Performs a slash command method.
+     *
+     * @param event an event from Discord's slash command
+     */
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         String discordId = event.getUser().getId();
@@ -103,6 +125,11 @@ public class DeleteOfficeHourCommand implements Command {
         return;
     }
 
+    /**
+     * Constructs a command from guided user input.
+     *
+     * @return CommandData
+     */
     @Override
     public CommandData getCommandData() {
         return new CommandData(getName(), "Delete your office hour if it is not reserved")
