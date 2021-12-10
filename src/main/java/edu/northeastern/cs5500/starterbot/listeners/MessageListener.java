@@ -31,6 +31,7 @@ public class MessageListener extends ListenerAdapter {
         Command staffDailyOfficeHour = new GetScheduleCommand(discordIdController);
         Command getSchedule = new GetScheduleCommand(discordIdController);
         Command checkInPersonCommand = new CheckInPersonOfficeHourCommand(discordIdController);
+        Command cancelOfficeHour = new CancelOfficeHourCommand(discordIdController);
 
         commandsHashMap.put(register.getName(), register);
         commandsHashMap.put(reserve.getName(), reserve);
@@ -42,6 +43,7 @@ public class MessageListener extends ListenerAdapter {
         commandsHashMap.put(staffDailyOfficeHour.getName(), staffDailyOfficeHour);
         commandsHashMap.put(getSchedule.getName(), getSchedule);
         commandsHashMap.put(checkInPersonCommand.getName(), checkInPersonCommand);
+        commandsHashMap.put(cancelOfficeHour.getName(), cancelOfficeHour);
     }
 
     public Collection<CommandData> getCommandData() {
