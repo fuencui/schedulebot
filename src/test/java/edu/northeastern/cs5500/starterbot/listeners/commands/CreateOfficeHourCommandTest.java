@@ -88,7 +88,6 @@ class CreateOfficeHourCommandTest {
         discordIdController = new DiscordIdController(userRepository);
         createOfficeHourCommand = new CreateOfficeHourCommand(discordIdController);
 
-
         mb1 = new MessageBuilder();
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Create an office hour");
@@ -217,7 +216,6 @@ class CreateOfficeHourCommandTest {
         assertEquals(createOfficeHourCommand.getReply("Monday", 1, 2, "discordIdTA1"), mb1.build());
         assertEquals(
                 createOfficeHourCommand.getReply("Tuesday", 2, 1, "discordIdProf1"), mb2.build());
-        
     }
 
     @Test
@@ -235,17 +233,17 @@ class CreateOfficeHourCommandTest {
         assertEquals(
                 discordIdController.getNEUUser("discordIdProf1").getInvolvedOfficeHours().get(0),
                 officeHour2);
-    }         
+    }
 
     @Test
-    void testGetReplyByCreateMultipleOfficeHour() {      
+    void testGetReplyByCreateMultipleOfficeHour() {
         assertEquals(createOfficeHourCommand.getReply("Sunday", 1, 3, "discordIdTA2"), mb3.build());
         assertEquals(
                 createOfficeHourCommand.getReply("Saturday", 3, 1, "discordIdProf2"), mb4.build());
     }
 
     @Test
-    void test(){
+    void test() {
         createOfficeHourCommand.getReply("Sunday", 1, 3, "discordIdTA2");
         createOfficeHourCommand.getReply("Saturday", 3, 1, "discordIdProf2");
         OfficeHour officeHour =
