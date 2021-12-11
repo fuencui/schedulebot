@@ -187,7 +187,9 @@ public class CancelOfficeHourCommand implements Command {
                                     + " to "
                                     + endHour
                                     + " with "
-                                    + staff.getUserName().toString(),
+                                    + staff.getUserName().toString()
+                                    + "\n"
+                                    + "It is now available for reservation to all students",
                             true);
                     return eb.build();
                 }
