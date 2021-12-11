@@ -3,8 +3,11 @@ package edu.northeastern.cs5500.starterbot.listeners.commands;
 import com.mongodb.lang.Nullable;
 import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
+import java.awt.Color;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -45,7 +48,7 @@ public class SymptomCommand implements Command {
      *
      * @param discordId String, the discord id
      * @param user NEUUser, the neu user
-     * @param vaccinationStatus boolean, true or false input argument
+     * @param covidSymptomStatus boolean, true or false input argument
      * @return
      */
     Message getReply(
@@ -56,25 +59,84 @@ public class SymptomCommand implements Command {
         MessageBuilder mb = new MessageBuilder();
 
         if (!discordIdController.updateSymptomatic(discordId, covidSymptomStatus)) {
-            return mb.append(
-                            "Unable to determine whether you have covid symptom or not; have you registered?")
+            return mb.setEmbed(
+                            createNonRegisteredUserReportSymptomatic(
+                                    discordId, user, covidSymptomStatus))
                     .build();
         }
 
         discordIdController.updateSymptomatic(discordId, covidSymptomStatus);
         if (covidSymptomStatus) {
-            return mb.append(
-                            "You are experiencing covid symptom, So you will not be able to"
-                                    + "\n"
-                                    + "make an inperson office hour appointment in order to avoid potential risk"
-                                    + "\n"
-                                    + "Thanks for your understanding!")
+            return mb.setEmbed(createSymptomaticReport(discordId, user, covidSymptomStatus))
                     .build();
         } else {
-            return mb.append(
-                            "You are NOT experiencing covid symptom. So you can make inperson office hour appointment")
+            return mb.setEmbed(createNonSymptomaticReport(discordId, user, covidSymptomStatus))
                     .build();
         }
+    }
+
+    /**
+     * The message replys when user is not registered
+     * @param discordId String, the discord id
+     * @param user NEUUser, the user
+     * @param covidSymptomStatus boolean, true or false
+     * @return
+     */
+    MessageEmbed createNonRegisteredUserReportSymptomatic(
+            String discordId, NEUUser user, boolean covidSymptomStatus) {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("-----------Covid Symptom Self-report----------");
+        eb.setColor(Color.CYAN);
+        eb.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
+        eb.setDescription(
+                "Unable to determine whether you have covid symptom or not."
+                        + "\n"
+                        + "Have you registered?");
+        return eb.build();
+    }
+
+    /**
+     * The message replys when user have covid symptom
+     * @param discordId String, the discord id
+     * @param user NEUUser, the user
+     * @param covidSymptomStatus boolean, true or false
+     * @return
+     */
+    MessageEmbed createSymptomaticReport(
+            String discordId, NEUUser user, boolean covidSymptomStatus) {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("---------------Covid Symptom Self-report---------------");
+        eb.setColor(Color.CYAN);
+        eb.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
+        eb.setDescription(
+                "You are experiencing covid symptom, So you will not"
+                        + "\n"
+                        + "be able to make an inperson office hour appointment"
+                        + "\n"
+                        + "in order to avoid potential risk"
+                        + "\n"
+                        + "Thanks for your understanding!");
+        return eb.build();
+    }
+
+    /**
+     * The message replys when user does not have covid symptom
+     * @param discordId String, the discord id
+     * @param user NEUUser, the user
+     * @param covidSymptomStatus boolean, true or false
+     * @return
+     */
+    MessageEmbed createNonSymptomaticReport(
+            String discordId, NEUUser user, boolean covidSymptomStatus) {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("---------------Covid Symptom Self-report---------------");
+        eb.setColor(Color.CYAN);
+        eb.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
+        eb.setDescription(
+                "You are NOT experiencing covid symptom."
+                        + "\n"
+                        + "So you can make inperson office hour appointment");
+        return eb.build();
     }
 
     /**
