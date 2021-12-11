@@ -77,6 +77,7 @@ public class SymptomCommand implements Command {
 
     /**
      * The message replys when user is not registered
+     *
      * @param discordId String, the discord id
      * @param user NEUUser, the user
      * @param covidSymptomStatus boolean, true or false
@@ -97,6 +98,7 @@ public class SymptomCommand implements Command {
 
     /**
      * The message replys when user have covid symptom
+     *
      * @param discordId String, the discord id
      * @param user NEUUser, the user
      * @param covidSymptomStatus boolean, true or false
@@ -121,6 +123,7 @@ public class SymptomCommand implements Command {
 
     /**
      * The message replys when user does not have covid symptom
+     *
      * @param discordId String, the discord id
      * @param user NEUUser, the user
      * @param covidSymptomStatus boolean, true or false

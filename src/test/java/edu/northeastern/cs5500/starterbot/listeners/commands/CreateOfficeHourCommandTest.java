@@ -1,9 +1,8 @@
-package edu.northeastern.cs5500.starterbot;
+package edu.northeastern.cs5500.starterbot.listeners.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
-import edu.northeastern.cs5500.starterbot.listeners.commands.CreateOfficeHourCommand;
 import edu.northeastern.cs5500.starterbot.model.DayOfWeek;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
@@ -19,7 +18,6 @@ import org.junit.jupiter.api.Test;
 class CreateOfficeHourCommandTest {
     private CreateOfficeHourCommand createOfficeHourCommand;
     private DiscordIdController discordIdController;
-    private DiscordIdController emptyDiscordIdController;
 
     private NEUUser student1;
     private NEUUser student2;
@@ -32,6 +30,11 @@ class CreateOfficeHourCommandTest {
     private NEUUser prof3;
 
     private GenericRepository<NEUUser> userRepository = new InMemoryRepository<NEUUser>();
+
+    private MessageBuilder mb1;
+    private MessageBuilder mb2;
+    private MessageBuilder mb3;
+    private MessageBuilder mb4;
 
     @BeforeEach
     void initialize() {
@@ -84,6 +87,95 @@ class CreateOfficeHourCommandTest {
 
         discordIdController = new DiscordIdController(userRepository);
         createOfficeHourCommand = new CreateOfficeHourCommand(discordIdController);
+
+
+        mb1 = new MessageBuilder();
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Create an office hour");
+        eb.setColor(Color.CYAN);
+        eb.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
+        eb.addField(
+                "OfficeHour",
+                ":partying_face:"
+                        + "Success! You created an office hour on "
+                        + "monday"
+                        + " from "
+                        + 1
+                        + " to "
+                        + 2,
+                true);
+        mb1.setEmbed(eb.build());
+
+        mb2 = new MessageBuilder();
+        EmbedBuilder eb2 = new EmbedBuilder();
+        eb2.setTitle("Create an office hour");
+        eb2.setColor(Color.CYAN);
+        eb2.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
+        eb2.addField(
+                "OfficeHour",
+                ":partying_face:"
+                        + "Success! You created an office hour on "
+                        + "tuesday"
+                        + " from "
+                        + 1
+                        + " to "
+                        + 2,
+                true);
+        mb2.setEmbed(eb2.build());
+
+        mb3 = new MessageBuilder();
+        EmbedBuilder eb3 = new EmbedBuilder();
+        eb3.setTitle("Create Multiple office hours");
+        eb3.setColor(Color.CYAN);
+        eb3.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
+        eb3.addField(
+                "OfficeHour",
+                ":partying_face:"
+                        + "You created an office hour on "
+                        + "sunday"
+                        + " from "
+                        + 1
+                        + " to "
+                        + 2,
+                true);
+        eb3.addField(
+                "OfficeHour",
+                ":partying_face:"
+                        + "You created an office hour on "
+                        + "sunday"
+                        + " from "
+                        + 2
+                        + " to "
+                        + 3,
+                true);
+        mb3.setEmbed(eb3.build());
+
+        mb4 = new MessageBuilder();
+        EmbedBuilder eb4 = new EmbedBuilder();
+        eb4.setTitle("Create Multiple office hours");
+        eb4.setColor(Color.CYAN);
+        eb4.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
+        eb4.addField(
+                "OfficeHour",
+                ":partying_face:"
+                        + "You created an office hour on "
+                        + "saturday"
+                        + " from "
+                        + 1
+                        + " to "
+                        + 2,
+                true);
+        eb4.addField(
+                "OfficeHour",
+                ":partying_face:"
+                        + "You created an office hour on "
+                        + "saturday"
+                        + " from "
+                        + 2
+                        + " to "
+                        + 3,
+                true);
+        mb4.setEmbed(eb4.build());
     }
 
     @Test
@@ -122,126 +214,54 @@ class CreateOfficeHourCommandTest {
 
     @Test
     void testGetReplyByCreateSingleOfficeHour() {
-        MessageBuilder mb1 = new MessageBuilder();
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("Create an office hour");
-        eb.setColor(Color.CYAN);
-        eb.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
-        eb.addField(
-                "OfficeHour",
-                ":partying_face:"
-                        + "Success! You created an office hour on "
-                        + "monday"
-                        + " from "
-                        + 1
-                        + " to "
-                        + 2,
-                true);
-        mb1.setEmbed(eb.build());
         assertEquals(createOfficeHourCommand.getReply("Monday", 1, 2, "discordIdTA1"), mb1.build());
+        assertEquals(
+                createOfficeHourCommand.getReply("Tuesday", 2, 1, "discordIdProf1"), mb2.build());
+        
+    }
+
+    @Test
+    void testListAfterCreateSingleOfficeHour() {
+        createOfficeHourCommand.getReply("Wednesday", 1, 2, "discordIdTA1");
+        createOfficeHourCommand.getReply("Thursday", 2, 1, "discordIdProf1");
         OfficeHour officeHour =
-                new OfficeHour(DayOfWeek.MONDAY, new OfficeHourType("Online"), 1, 2, "nuidTA1");
+                new OfficeHour(DayOfWeek.WEDNESDAY, new OfficeHourType("Online"), 1, 2, "nuidTA1");
         assertEquals(
                 discordIdController.getNEUUser("discordIdTA1").getInvolvedOfficeHours().get(0),
                 officeHour);
 
-        MessageBuilder mb2 = new MessageBuilder();
-        EmbedBuilder eb2 = new EmbedBuilder();
-        eb2.setTitle("Create an office hour");
-        eb2.setColor(Color.CYAN);
-        eb2.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
-        eb2.addField(
-                "OfficeHour",
-                ":partying_face:"
-                        + "Success! You created an office hour on "
-                        + "tuesday"
-                        + " from "
-                        + 1
-                        + " to "
-                        + 2,
-                true);
-        mb2.setEmbed(eb2.build());
-        assertEquals(
-                createOfficeHourCommand.getReply("Tuesday", 2, 1, "discordIdProf1"), mb2.build());
         OfficeHour officeHour2 =
-                new OfficeHour(DayOfWeek.TUESDAY, new OfficeHourType("Online"), 1, 2, "nuidProf1");
+                new OfficeHour(DayOfWeek.THURSDAY, new OfficeHourType("Online"), 1, 2, "nuidProf1");
         assertEquals(
                 discordIdController.getNEUUser("discordIdProf1").getInvolvedOfficeHours().get(0),
                 officeHour2);
+    }         
+
+    @Test
+    void testGetReplyByCreateMultipleOfficeHour() {      
+        assertEquals(createOfficeHourCommand.getReply("Sunday", 1, 3, "discordIdTA2"), mb3.build());
+        assertEquals(
+                createOfficeHourCommand.getReply("Saturday", 3, 1, "discordIdProf2"), mb4.build());
     }
 
     @Test
-    void testGetReplyByCreateMultipleOfficeHour() {
-        MessageBuilder mb1 = new MessageBuilder();
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("Create Multiple office hours");
-        eb.setColor(Color.CYAN);
-        eb.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
-        eb.addField(
-                "OfficeHour",
-                ":partying_face:"
-                        + "You created an office hour on "
-                        + "sunday"
-                        + " from "
-                        + 1
-                        + " to "
-                        + 2,
-                true);
-        eb.addField(
-                "OfficeHour",
-                ":partying_face:"
-                        + "You created an office hour on "
-                        + "sunday"
-                        + " from "
-                        + 2
-                        + " to "
-                        + 3,
-                true);
-        mb1.setEmbed(eb.build());
-        assertEquals(createOfficeHourCommand.getReply("Sunday", 1, 3, "discordIdTA2"), mb1.build());
+    void test(){
+        createOfficeHourCommand.getReply("Sunday", 1, 3, "discordIdTA2");
+        createOfficeHourCommand.getReply("Saturday", 3, 1, "discordIdProf2");
         OfficeHour officeHour =
                 new OfficeHour(DayOfWeek.SUNDAY, new OfficeHourType("Online"), 1, 2, "nuidTA2");
         OfficeHour officeHour2 =
                 new OfficeHour(DayOfWeek.SUNDAY, new OfficeHourType("Online"), 2, 3, "nuidTA2");
+        OfficeHour officeHour3 =
+                new OfficeHour(DayOfWeek.SATURDAY, new OfficeHourType("Online"), 1, 2, "nuidProf2");
+        OfficeHour officeHour4 =
+                new OfficeHour(DayOfWeek.SATURDAY, new OfficeHourType("Online"), 2, 3, "nuidProf2");
         assertEquals(
                 discordIdController.getNEUUser("discordIdTA2").getInvolvedOfficeHours().get(0),
                 officeHour);
         assertEquals(
                 discordIdController.getNEUUser("discordIdTA2").getInvolvedOfficeHours().get(1),
                 officeHour2);
-
-        MessageBuilder mb2 = new MessageBuilder();
-        EmbedBuilder eb2 = new EmbedBuilder();
-        eb2.setTitle("Create Multiple office hours");
-        eb2.setColor(Color.CYAN);
-        eb2.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
-        eb2.addField(
-                "OfficeHour",
-                ":partying_face:"
-                        + "You created an office hour on "
-                        + "saturday"
-                        + " from "
-                        + 1
-                        + " to "
-                        + 2,
-                true);
-        eb2.addField(
-                "OfficeHour",
-                ":partying_face:"
-                        + "You created an office hour on "
-                        + "saturday"
-                        + " from "
-                        + 2
-                        + " to "
-                        + 3,
-                true);
-        mb2.setEmbed(eb2.build());
-        assertEquals(
-                createOfficeHourCommand.getReply("Saturday", 3, 1, "discordIdProf2"), mb2.build());
-        OfficeHour officeHour3 =
-                new OfficeHour(DayOfWeek.SATURDAY, new OfficeHourType("Online"), 1, 2, "nuidProf2");
-        OfficeHour officeHour4 =
-                new OfficeHour(DayOfWeek.SATURDAY, new OfficeHourType("Online"), 2, 3, "nuidProf2");
         assertEquals(
                 discordIdController.getNEUUser("discordIdProf2").getInvolvedOfficeHours().get(0),
                 officeHour3);
