@@ -1,9 +1,9 @@
-name: Unit Testing
+name: Unit Test Coverage
 
 on: [pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     env:
       BOT_TOKEN: "test"
@@ -14,5 +14,5 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - name: Build with Gradle
-        run: ./gradlew -x spotlessCheck build
+      - name: Run unit tests and check coverage
+        run: ./gradlew -x spotlessCheck check

@@ -9,7 +9,6 @@ import edu.northeastern.cs5500.starterbot.service.MongoDBService;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import org.bson.types.ObjectId;
 
 public class MongoDBRepository<T extends Model> implements GenericRepository<T> {
@@ -18,7 +17,6 @@ public class MongoDBRepository<T extends Model> implements GenericRepository<T> 
 
     MongoCollection<T> collection;
 
-    @Inject
     public MongoDBRepository(Class<T> clazz, MongoDBService mongoDBService) {
         MongoDatabase mongoDatabase = mongoDBService.getMongoDatabase();
         collection = mongoDatabase.getCollection(clazz.getName(), clazz);

@@ -4,14 +4,12 @@ import edu.northeastern.cs5500.starterbot.model.Model;
 import java.util.Collection;
 import java.util.HashMap;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import org.bson.types.ObjectId;
 
 public class InMemoryRepository<T extends Model> implements GenericRepository<T> {
 
     HashMap<ObjectId, T> collection;
 
-    @Inject
     public InMemoryRepository() {
         collection = new HashMap<>();
     }
