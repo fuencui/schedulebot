@@ -8,14 +8,11 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-@Singleton
 @Slf4j
 public class MongoDBService implements Service {
     @Getter private MongoDatabase mongoDatabase;
@@ -30,7 +27,6 @@ public class MongoDBService implements Service {
         return databaseURI;
     }
 
-    @Inject
     public MongoDBService() {
         CodecRegistry codecRegistry =
                 fromRegistries(
