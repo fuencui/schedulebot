@@ -4,7 +4,13 @@ import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.DayOfWeek;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
+import java.awt.Color;
 import java.util.List;
+import javax.annotation.Nonnull;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -55,21 +61,44 @@ public class DeleteOfficeHourCommand implements Command {
      */
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        String discordId = event.getUser().getId();
-        NEUUser user = discordIdController.getNEUUser(discordId);
-        if (!user.isStaff()) {
-            event.reply("Only instructors can delete (their own) office hours.").queue();
-            return;
-        }
-
         final OptionMapping dayOfWeekOption = event.getOption("dayofweek");
-        final DayOfWeek dayOfWeek;
         String dayOfWeekString;
         if (dayOfWeekOption == null) {
             dayOfWeekString = null;
         } else {
             dayOfWeekString = toTitleCase(dayOfWeekOption.getAsString());
         }
+        int startHour = Integer.parseInt(event.getOption("start").getAsString());
+        int endHour = Integer.parseInt(event.getOption("end").getAsString());
+        String discordId = event.getUser().getId();
+
+        final Message reply = getReply(dayOfWeekString, startHour, endHour, discordId);
+        event.reply(reply).queue();
+    }
+
+    /**
+     * Builds a Message for onSlashCommand method to reply depending on the arguments, then decides
+     * what MessageEmbed method to call
+     *
+     * @param dayOfWeekString String of day of week
+     * @param startHour int of office hour start time
+     * @param endHour int of office hour end time
+     * @param discordId String of user discordId
+     * @return Message for onSlashCommand method
+     */
+    public Message getReply(
+            @Nonnull String dayOfWeekString,
+            @Nonnull int startHour,
+            @Nonnull int endHour,
+            @Nonnull String discordId) {
+        MessageBuilder mb = new MessageBuilder();
+
+        NEUUser user = discordIdController.getNEUUser(discordId);
+        if (!user.isStaff()) {
+            return mb.append("Only instructors can delete (their own) office hours.").build();
+        }
+
+        final DayOfWeek dayOfWeek;
         switch (dayOfWeekString) {
             case "Monday":
                 dayOfWeek = DayOfWeek.MONDAY;
@@ -93,33 +122,59 @@ public class DeleteOfficeHourCommand implements Command {
                 dayOfWeek = DayOfWeek.SUNDAY;
                 break;
             default:
-                event.reply("Please enter a valid day").queue();
-                return;
+                return mb.append("Please enter a valid day").build();
         }
 
-        int startHour = Integer.parseInt(event.getOption("start").getAsString());
-        int endHour = Integer.parseInt(event.getOption("end").getAsString());
+        return mb.setEmbed(deleteOfficeHour(dayOfWeek, startHour, endHour, discordId)).build();
+    }
 
+    /**
+     * Builds an Embed for Message to delete a single office hour from user's list and sets up an
+     * advanced display format
+     *
+     * @param dayOfWeek enum of DayOfWeek
+     * @param startHour int of office hour start time
+     * @param endHour int of office hour end time
+     * @param discordId String of user discordId
+     * @return A MessageEmbed for Message method to build
+     */
+    MessageEmbed deleteOfficeHour(
+            DayOfWeek dayOfWeek, int startHour, int endHour, String discordId) {
+        NEUUser user = discordIdController.getNEUUser(discordId);
         List<OfficeHour> involvedOfficeHours = user.getInvolvedOfficeHours();
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Delete an office hour");
+        eb.setColor(Color.CYAN);
+        eb.setImage("https://brand.northeastern.edu/wp-content/uploads/4_BlackOnColor.png");
         for (int i = 0; i < involvedOfficeHours.size(); i++) {
             if (involvedOfficeHours.get(i).getDayOfWeek().equals(dayOfWeek)
                     && involvedOfficeHours.get(i).getStartHour() == startHour
                     && involvedOfficeHours.get(i).getEndHour() == endHour
                     && involvedOfficeHours.get(i).getAttendeeNUID() == null) {
+                OfficeHour officeHour = involvedOfficeHours.get(i);
                 involvedOfficeHours.remove(i);
                 discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
-                event.reply("You have successfully deleted this office hour!").queue();
-                return;
+                eb.addField(
+                        "",
+                        ":partying_face:"
+                                + "Success! You have deleted this office hour on "
+                                + officeHour.getDayOfWeek().toString().toLowerCase()
+                                + " from "
+                                + startHour
+                                + " to "
+                                + endHour,
+                        true);
+                return eb.build();
             } else if (involvedOfficeHours.get(i).getDayOfWeek().equals(dayOfWeek)
                     && involvedOfficeHours.get(i).getStartHour() == startHour
                     && involvedOfficeHours.get(i).getEndHour() == endHour
                     && involvedOfficeHours.get(i).getAttendeeNUID() != null) {
-                event.reply("Reserved office hours cannot be deleted.").queue();
-                return;
+                eb.addField("", "Reserved office hours cannot be deleted.", true);
+                return eb.build();
             }
         }
-        event.reply("This office hour has not been created.").queue();
-        return;
+        eb.addField("", "This office hour has not been created.", true);
+        return eb.build();
     }
 
     /**
