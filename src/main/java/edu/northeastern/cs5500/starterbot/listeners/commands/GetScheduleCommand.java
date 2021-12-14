@@ -159,10 +159,17 @@ public class GetScheduleCommand implements Command {
                     eb.addField(
                             hour.getDayOfWeek().toString(),
                             String.format(
-                                    "%d:00 to %d:00; %s",
+                                    "%d:00 to %d:00; %s %s",
                                     hour.getStartHour(),
                                     hour.getEndHour(),
-                                    hour.getOfficeHourType().getTypeName()),
+                                    hour.getOfficeHourType().getTypeName(),
+                                    hour.getAttendeeNUID() == null
+                                            ? ""
+                                            : "\nStudent:  "
+                                                    + discordIdController
+                                                            .getNEUUserByNuid(
+                                                                    hour.getAttendeeNUID())
+                                                            .getUserName()),
                             false);
             }
         }
@@ -180,10 +187,16 @@ public class GetScheduleCommand implements Command {
                 eb.addField(
                         hour.getDayOfWeek().toString(),
                         String.format(
-                                "%d:00 to %d:00; %s",
+                                "%d:00 to %d:00; %s %s",
                                 hour.getStartHour(),
                                 hour.getEndHour(),
-                                hour.getOfficeHourType().getTypeName()),
+                                hour.getOfficeHourType().getTypeName(),
+                                hour.getAttendeeNUID() == null
+                                        ? ""
+                                        : "\nStudent:  "
+                                                + discordIdController
+                                                        .getNEUUserByNuid(hour.getAttendeeNUID())
+                                                        .getUserName()),
                         false);
             }
         }
