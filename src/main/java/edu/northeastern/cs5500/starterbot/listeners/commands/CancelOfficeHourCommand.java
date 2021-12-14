@@ -4,6 +4,7 @@ import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.DayOfWeek;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
+import edu.northeastern.cs5500.starterbot.model.OfficeHourType;
 import java.awt.Color;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -170,29 +171,30 @@ public class CancelOfficeHourCommand implements Command {
                     if (staffOfficeHours.get(j).getDayOfWeek().equals(dayOfWeek)
                             && staffOfficeHours.get(j).getStartHour() == startHour
                             && staffOfficeHours.get(j).getEndHour() == endHour) {
+                        staffOfficeHours.get(j).setOfficeHourType(new OfficeHourType("Online"));
                         staffOfficeHours.get(j).setAttendeeNUID(null);
                         discordIdController.setInvolvedOfficeHours(
                                 staff.getDiscordId(), staffOfficeHours);
                     }
-                    OfficeHour officeHour = involvedOfficeHours.get(i);
-                    involvedOfficeHours.remove(i);
-                    discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
-                    eb.addField(
-                            "",
-                            ":partying_face:"
-                                    + "Success! You have canceled this office hour on "
-                                    + officeHour.getDayOfWeek().toString().toLowerCase()
-                                    + " from "
-                                    + startHour
-                                    + " to "
-                                    + endHour
-                                    + " with "
-                                    + staff.getUserName().toString()
-                                    + "\n"
-                                    + "It is now available for reservation to all students",
-                            true);
-                    return eb.build();
                 }
+                OfficeHour officeHour = involvedOfficeHours.get(i);
+                involvedOfficeHours.remove(i);
+                discordIdController.setInvolvedOfficeHours(discordId, involvedOfficeHours);
+                eb.addField(
+                        "",
+                        ":partying_face:"
+                                + "Success! You have canceled this office hour on "
+                                + officeHour.getDayOfWeek().toString().toLowerCase()
+                                + " from "
+                                + startHour
+                                + " to "
+                                + endHour
+                                + " with "
+                                + staff.getUserName().toString()
+                                + "\n"
+                                + "It is now available for reservation to all students",
+                        true);
+                return eb.build();
             }
         }
         eb.addField(
