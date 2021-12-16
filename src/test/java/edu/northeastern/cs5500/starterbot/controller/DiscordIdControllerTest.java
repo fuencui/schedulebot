@@ -17,9 +17,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Test DiscordIdController
- */
+/** Test DiscordIdController */
 class DiscordIdControllerTest {
     private DiscordIdController emptyDiscordIdController;
     private DiscordIdController discordIdController;
@@ -37,9 +35,7 @@ class DiscordIdControllerTest {
     private GenericRepository<NEUUser> emptyUserRepository = new InMemoryRepository<NEUUser>();
     private GenericRepository<NEUUser> userRepository = new InMemoryRepository<NEUUser>();
 
-    /**
-     * Test statement setup before each test 
-     */
+    /** Test statement setup before each test */
     @BeforeEach
     public void testSetup() {
         // create enough NEUUser for statement coverage and branch coverage
@@ -94,9 +90,7 @@ class DiscordIdControllerTest {
         emptyDiscordIdController = new DiscordIdController(emptyUserRepository);
     }
 
-    /**
-     * Test getNuidByDiscordId
-     */
+    /** Test getNuidByDiscordId */
     @Test
     void testGetNuidByDiscordId() {
         assertEquals(discordIdController.getNuidByDiscordId("discordId0001"), "nuid0001");
@@ -116,9 +110,7 @@ class DiscordIdControllerTest {
         assertNull(emptyDiscordIdController.getNuidByDiscordId(" "));
     }
 
-    /**
-     * Test isDiscordIdRegistered
-     */
+    /** Test isDiscordIdRegistered */
     @Test
     void testIsDiscordIdRegistered() {
         assertTrue(discordIdController.isDiscordIdRegistered("discordId0001"));
@@ -138,9 +130,7 @@ class DiscordIdControllerTest {
         assertFalse(emptyDiscordIdController.isDiscordIdRegistered(" "));
     }
 
-    /**
-     * Test getNEUUser
-     */
+    /** Test getNEUUser */
     @Test
     void testgetNEUUser() {
         assertEquals(discordIdController.getNEUUser("discordId0001"), student1);
@@ -169,9 +159,7 @@ class DiscordIdControllerTest {
         assertNull(emptyDiscordIdController.getNEUUser(""));
     }
 
-    /**
-     * Test createNEUUser
-     */
+    /** Test createNEUUser */
     @Test
     void testCreateNEUUser() {
         NEUUser user1 = discordIdController.createNEUUser("user1", "0001", "student", "d1");
@@ -203,9 +191,7 @@ class DiscordIdControllerTest {
         assertEquals(emptyDiscordIdController.getNEUUserByNuid("0008"), user8);
     }
 
-    /**
-     * Test getAllTaProf
-     */
+    /** Test getAllTaProf */
     @Test
     void testGetAllTaProf() {
         Collection<NEUUser> TaAndProf = discordIdController.getAllTAProf();
@@ -226,9 +212,7 @@ class DiscordIdControllerTest {
         assertThat(emptyTaAndProf.size()).isEqualTo(0);
     }
 
-    /**
-     * Test updateVaccination
-     */
+    /** Test updateVaccination */
     @Test
     void testUpdateVaccination() {
         NEUUser user1 = discordIdController.createNEUUser("user1", "0001", "student", "d1");
@@ -243,9 +227,7 @@ class DiscordIdControllerTest {
         assertFalse(emptyDiscordIdController.updateVaccination("discordId", true));
     }
 
-    /**
-     * Test updateSymtomatic
-     */
+    /** Test updateSymtomatic */
     @Test
     void testUpdateSymptomatic() {
         NEUUser user1 = discordIdController.createNEUUser("user1", "0001", "student", "d1");
@@ -260,9 +242,7 @@ class DiscordIdControllerTest {
         assertFalse(emptyDiscordIdController.updateSymptomatic("discordId", true));
     }
 
-    /**
-     * Test setInvolveOfficeHours
-     */
+    /** Test setInvolveOfficeHours */
     @Test
     void testSetInvolvedOfficeHours() {
         List<OfficeHour> list = new ArrayList<OfficeHour>();
@@ -279,9 +259,7 @@ class DiscordIdControllerTest {
         assertFalse(emptyDiscordIdController.setInvolvedOfficeHours("discordId", list));
     }
 
-    /**
-     * Test getNEUUserByNuid
-     */
+    /** Test getNEUUserByNuid */
     @Test
     void testGetNEUUserByNuid() {
         assertEquals(discordIdController.getNEUUserByNuid("nuid0001"), student1);
