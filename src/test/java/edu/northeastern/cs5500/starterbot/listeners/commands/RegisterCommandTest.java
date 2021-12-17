@@ -64,38 +64,12 @@ public class RegisterCommandTest {
     }
 
     @Test
-    void testGetName2() {
-        assertEquals(registerCommand.getName(), "register");
+    void testGetCommandData() {
+        assertThat(registerCommand.getCommandData()).isNotNull();
     }
 
     @Test
-    void testGetCommandData1() {
-        assertEquals(
-                registerCommand.getCommandData().getDescription(),
-                "register yourself with the bot");
-    }
-
-    @Test
-    void testGetCommandData2() {
-        assertEquals(registerCommand.getCommandData().getOptions().get(0).getName(), "name");
-        assertEquals(
-                registerCommand.getCommandData().getOptions().get(0).getDescription(),
-                "The name you would like to be referred to as");
-    }
-
-    @Test
-    void testGetCommandData3() {
-        assertEquals(registerCommand.getCommandData().getOptions().get(1).getName(), "nuid");
-        assertEquals(
-                registerCommand.getCommandData().getOptions().get(1).getDescription(),
-                "Your NUID (numbers only)");
-    }
-
-    @Test
-    void testGetCommandData4() {
-        assertEquals(registerCommand.getCommandData().getOptions().get(2).getName(), "role");
-        assertEquals(
-                registerCommand.getCommandData().getOptions().get(2).getDescription(),
-                "Your role: one of (student, ta, professor)");
+    void testGetCommandDataIsConsistent() {
+        assertThat(registerCommand.getCommandData().getName()).isEqualTo(registerCommand.getName());
     }
 }
