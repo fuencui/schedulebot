@@ -48,14 +48,20 @@ public class RegisterCommandTest {
 
     @Test
     void testComeBackUser() {
-        MessageBuilder mb1 = new MessageBuilder();
-        EmbedBuilder eb1 = new EmbedBuilder();
-        eb1.setTitle(String.format("Welcome back %s:", student.getUserName()));
-        eb1.setDescription("You have already been registered");
-        mb1.setEmbed(eb1.build());
-        assertEquals(
-                registerCommand.getReply(student, "Lisa", "nuid111", "student", "discordId111"),
-                mb1.build());
+        MessageEmbed messageEmbed =
+                registerCommand.createAUser("Lisa", "nuid111", "student", "discordId111");
+        assertThat(messageEmbed).isNotNull();
+        assertThat(messageEmbed.getTitle()).isNotEmpty();
+        assertThat(messageEmbed.getFields()).isNotEmpty();
+
+        // MessageBuilder mb1 = new MessageBuilder();
+        // EmbedBuilder eb1 = new EmbedBuilder();
+        // eb1.setTitle(String.format("Welcome back %s:", student.getUserName()));
+        // eb1.setDescription("You have already been registered");
+        // mb1.setEmbed(eb1.build());
+        // assertEquals(
+        //         registerCommand.getReply(student, "Lisa", "nuid111", "student", "discordId111"),
+        //         mb1.build());
     }
 
     @Test
