@@ -25,6 +25,17 @@ public class RegisterCommand implements Command {
         return "register";
     }
 
+    Boolean isValidRole(String role) {
+        switch (role) {
+            case "student":
+            case "ta":
+            case "professor":
+                return true;
+            default:
+                return false;
+        }
+    }
+
     Message getReply(
             @Nullable NEUUser user,
             @Nullable String name,
@@ -51,9 +62,8 @@ public class RegisterCommand implements Command {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Creating A New User");
         NEUUser user = discordIdController.createNEUUser(name, nuid, role, discordId);
-        if (user == null) {
-            eb.setDescription("Invalid role; must be one of student/ta/professor");
-            eb.setDescription("Please try again");
+        if (!isValidRole(role)) {
+            eb.setDescription("Invalid role." + "\n" + "Must be one of student/ta/professor !");
         } else {
             eb.addField("Name", String.format("Name: %s", user.getUserName()), true);
             eb.addField("Nuid", String.format("Nuid: %s", user.getNuid()), true);
