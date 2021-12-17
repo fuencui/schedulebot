@@ -9,7 +9,7 @@
   - Lash, Alexander
 
 #### Video Introduction
-  - [Link to final presentation]()
+  - [Link to final presentation](https://youtu.be/J4PSZiVtnfA)
 
 #### Team's Design Document
   - [Link to team's document folder](https://docs.google.com/document/d/1ovmgM4YWLuRaeZr9wdYqUiz4VMMTyY_pI15BBAdxaYo/edit#heading=h.e9cyjipwvaak)
