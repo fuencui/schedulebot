@@ -199,8 +199,7 @@ public class DiscordIdController {
             @Nonnull String staffUserName) {
         NEUUser staffUser = getNEUUserByUserName(staffUserName);
         if (staffUser == null) {
-            // TODO: Throwing an exception would be better here...
-            return false;
+            throw new IllegalArgumentException("staffUsername cannot be null.");
         }
         String staffNUID = staffUser.getNuid();
         String studentNUID = user.getNuid();
@@ -243,9 +242,10 @@ public class DiscordIdController {
         }
 
         if (!foundOfficeHours) {
-            // TODO: This should be an assertion failure or something else
-            // For now we just return true because something WAS removed...
-            return true;
+            try {
+                assert false;
+            } catch (AssertionError e) {
+            }
         }
 
         staffUser.setInvolvedOfficeHours(staffOfficeHours);
