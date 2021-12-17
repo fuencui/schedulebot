@@ -24,7 +24,7 @@
 Schedule Bot is used to assist Professors/TAs/Students with office hours schedule.
 We seek to provide students with Professors/TAs’ availability in real-time,
 via discord in efforts to promote a more flexible, convenient, and faster scheduling experience
-  - TA/Professor 
+  - TA/Professor
     - ```/register```:  register as TA/Professor
       - OptionData: Username - NUID - Role(Ta or Professor)
 
@@ -61,7 +61,7 @@ via discord in efforts to promote a more flexible, convenient, and faster schedu
 
 #### Code coverage goals
 - [x] 65% Line test coverage
-- [x] 65% Branch test coverage 
+- [x] 65% Branch test coverage
 
 #### Bot requirements
 - [x] Bot requirement MongoDB
