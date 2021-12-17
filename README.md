@@ -9,7 +9,7 @@
   - Lash, Alexander
 
 #### Video Introduction
-  - [Link to final presentation]()
+  - [Link to final presentation](https://youtu.be/J4PSZiVtnfA)
 
 #### Team's Design Document
   - [Link to team's document folder](https://docs.google.com/document/d/1ovmgM4YWLuRaeZr9wdYqUiz4VMMTyY_pI15BBAdxaYo/edit#heading=h.e9cyjipwvaak)
@@ -68,9 +68,9 @@ via discord in efforts to promote a more flexible, convenient, and faster schedu
 - [x] Fly.io App Servers
 - [x] Gradle Build Tool
 - [ ] \(Optional) [Deploying with Docker](https://docs.docker.com/get-started/overview/)
-  - [ ] \(Optional) Use other database instead of MongoDB
-    - [ ] Implement Service interface
-    - [ ] Implement GenericRepository interface
-    - [ ] Assign GenericRepository<NEUUser> userRepository equal to otherSubclassDBRepository
-  - [ ] \(Optional) Use other app servers instead of Fly.io
-    - [ ] See fly.toml
+- [ ] \(Optional) Use other database instead of MongoDB
+  - [ ] Implement Service interface
+  - [ ] Implement GenericRepository interface
+  - [ ] Assign GenericRepository<NEUUser> userRepository equal to otherSubclassDBRepository
+- [ ] \(Optional) Use other app servers instead of Fly.io
+  - [ ] See fly.toml
