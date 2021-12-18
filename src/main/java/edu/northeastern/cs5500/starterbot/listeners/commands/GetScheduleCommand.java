@@ -3,8 +3,6 @@ package edu.northeastern.cs5500.starterbot.listeners.commands;
 import edu.northeastern.cs5500.starterbot.controller.DiscordIdController;
 import edu.northeastern.cs5500.starterbot.model.NEUUser;
 import edu.northeastern.cs5500.starterbot.model.OfficeHour;
-import java.awt.Color;
-import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -35,31 +33,6 @@ public class GetScheduleCommand implements Command {
     @Override
     public String getName() {
         return "schedule";
-    }
-
-    MessageEmbed getReply(String inputDayOfWeek) {
-        EmbedBuilder eb =
-                new EmbedBuilder()
-                        .setTitle("Scheduled Appointments for " + inputDayOfWeek)
-                        .setDescription("Description Placeholder")
-                        .setColor(new Color(15102474))
-                        .setTimestamp(OffsetDateTime.now())
-                        .setFooter("footer text", "https://cdn.discordapp.com/embed/avatars/0.png")
-                        .setThumbnail("https://cdn.discordapp.com/embed/avatars/0.png")
-                        .setImage("https://cdn.discordapp.com/embed/avatars/0.png")
-                        .setAuthor(
-                                "author name",
-                                "https://discordapp.com",
-                                "https://cdn.discordapp.com/embed/avatars/0.png")
-                        .addField("🤔", "some of these properties have certain limits...", false)
-                        .addField("😱", "try exceeding some of them!", false)
-                        .addField(
-                                "🙄",
-                                "an informative error should show up, and this view will remain as-is until all issues are fixed",
-                                false)
-                        .addField("<:thonkang:219069250692841473>", "these last two", true)
-                        .addField("<:thonkang:219069250692841473>", "are inline fields", true);
-        return eb.build();
     }
 
     /**
@@ -103,6 +76,11 @@ public class GetScheduleCommand implements Command {
         }
     }
 
+    /**
+     * An interface method will be called by outside of this class
+     *
+     * @param event check java discord API event document
+     */
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         final NEUUser user = discordIdController.getNEUUser(event.getUser().getId());
@@ -140,6 +118,14 @@ public class GetScheduleCommand implements Command {
         }
     }
 
+    /**
+     * A function will take a list of OfficeHour and a day of week in string. Will return all office
+     * hours in passed in list on passed in day of week.
+     *
+     * @param userOfficeHourList a list contains all current user's office hour.
+     * @param dayOfWeek the target day of week
+     * @return A MessageEmbed for getReply method to build
+     */
     MessageEmbed getSingleDayReply(List<OfficeHour> userOfficeHourList, String dayOfWeek) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle(String.format("Your appointments for %s:", dayOfWeek));
@@ -176,6 +162,13 @@ public class GetScheduleCommand implements Command {
         return eb.build();
     }
 
+    /**
+     * A function will take a list of OfficeHour and return all office hours in passed in list in
+     * MessageEmbed.
+     *
+     * @param userOfficeHourList a list contains all current user's office hour.
+     * @return A MessageEmbed for getReply method to build
+     */
     MessageEmbed getEntireWeekReply(List<OfficeHour> userOfficeHourList) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Your appointments for the week:");
@@ -203,6 +196,7 @@ public class GetScheduleCommand implements Command {
         return eb.build();
     }
 
+    /** For Java Discord API in App.java to add commands */
     @Override
     public CommandData getCommandData() {
         return new CommandData(

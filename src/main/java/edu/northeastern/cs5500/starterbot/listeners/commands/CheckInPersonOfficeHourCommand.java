@@ -27,7 +27,8 @@ public class CheckInPersonOfficeHourCommand extends GetScheduleCommand {
     }
 
     /**
-     * Filter all valid office hour
+     * A function will take a list of OfficeHour and a day of week in string. Will return all
+     * inperson office hours in passed in list on passed in day of week.
      *
      * @param userOfficeHourList contains all current user's office hours.
      * @param dayOfWeek The target day of week user want to check.
@@ -64,6 +65,13 @@ public class CheckInPersonOfficeHourCommand extends GetScheduleCommand {
         return eb.build();
     }
 
+    /**
+     * A function will take a list of OfficeHour and return all inperson office hours in passed in
+     * list in MessageEmbed.
+     *
+     * @param userOfficeHourList an office hour list.
+     * @return A MessageEmbed for getReply method to build
+     */
     @Override
     MessageEmbed getEntireWeekReply(List<OfficeHour> userOfficeHourList) {
         EmbedBuilder eb = new EmbedBuilder();
@@ -88,11 +96,11 @@ public class CheckInPersonOfficeHourCommand extends GetScheduleCommand {
         return eb.build();
     }
 
+    /** For Java Discord API in App.java to add commands */
     @Override
     public CommandData getCommandData() {
         return new CommandData(
-                        getName(),
-                        "Get your in-person office hours for the week or a given day (TA/Professor only).")
+                        getName(), "Get your in-person office hours for the week or a given day.")
                 .addOptions(
                         new OptionData(
                                 OptionType.STRING,
